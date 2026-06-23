@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Building2 } from "lucide-react"
 import { ROUTES } from "@/lib/constants"
 import { Separator } from "@/components/ui/separator"
+import Image from "next/image"
 
 export function Footer() {
   return (
@@ -10,8 +11,9 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-3">
             <Link href={ROUTES.HOME} className="flex items-center gap-2">
-              <Building2 className="h-6 w-6 text-primary" />
-              <span className="text-xl font-bold">CytyFlix</span>
+              <Image src={'/applogo.png'} alt="Logo" width={300} height={300} className="h-16 w-30 text-primary" />
+              {/* <Building2 className="h-6 w-6 text-primary" />
+              <span className="text-xl font-bold">CytyFlix</span> */}
             </Link>
             <p className="text-sm text-muted-foreground">
               Discover your perfect home. Modern housing platform connecting renters with property owners across Nigeria.

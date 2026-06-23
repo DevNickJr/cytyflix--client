@@ -1,12 +1,16 @@
 "use client"
 
-import { useQuery, type UseQueryOptions } from "@tanstack/react-query"
+import { QueryKey, useQuery, type UseQueryOptions } from "@tanstack/react-query"
 
-export function useFetch<T>(
-  queryKey: string[],
+export function useFetch<T>({
+  queryKey,
+  queryFn,
+  options
+}: {
+  queryKey: QueryKey,
   queryFn: () => Promise<T>,
   options?: Omit<UseQueryOptions<T, Error>, "queryKey" | "queryFn">
-) {
+}) {
   return useQuery<T, Error>({
     queryKey,
     queryFn,

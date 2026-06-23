@@ -5,18 +5,18 @@ import { useMutationAction } from "./use-mutation"
 import { notificationService } from "@/services/notification.service"
 
 export function useNotifications(page = 1, limit = 20) {
-  return useFetch(
-    ["notifications", String(page), String(limit)],
-    () => notificationService.getNotifications(page, limit)
-  )
+  return useFetch({
+    queryKey: ["notifications", page, limit],
+    queryFn: () => notificationService.getNotifications(page, limit),
+  })
 }
 
 export function useUnreadCount() {
-  return useFetch(
-    ["unread-count"],
-    () => notificationService.getUnreadCount(),
-    { refetchInterval: 30000 }
-  )
+  return useFetch({
+    queryKey: ["unread-count"],
+    queryFn: () => notificationService.getUnreadCount(),
+    options: { refetchInterval: 30000 }
+  })
 }
 
 export function useMarkAsRead() {

@@ -15,10 +15,10 @@ export function useProperties(initialFilters?: PropertyFilters) {
     ...initialFilters,
   })
 
-  const query = useFetch(
-    ["properties", JSON.stringify(filters)],
-    () => propertyService.getProperties(filters)
-  )
+  const query = useFetch({
+    queryKey: ["properties", JSON.stringify(filters)],
+    queryFn: () => propertyService.getProperties(filters)
+  })
 
   const updateFilters = useCallback((newFilters: Partial<PropertyFilters>) => {
     setFilters((prev) => ({ ...prev, ...newFilters, page: newFilters.page ?? 1 }))
@@ -32,18 +32,18 @@ export function useProperties(initialFilters?: PropertyFilters) {
 }
 
 export function useProperty(id: string) {
-  return useFetch(
-    ["property", id],
-    () => propertyService.getProperty(id),
-    { enabled: !!id }
-  )
+  return useFetch({
+    queryKey: ["property", id],
+    queryFn: () => propertyService.getProperty(id),
+    options: { enabled: !!id }
+  })
 }
 
 export function useMyProperties(page = 1, limit = 20) {
-  return useFetch(
-    ["my-properties", String(page), String(limit)],
-    () => propertyService.getMyProperties(page, limit)
-  )
+  return useFetch({
+    queryKey: ["my-properties", page, limit],
+    queryFn: () => propertyService.getMyProperties(page, limit)
+  })
 }
 
 export function useCreateProperty() {

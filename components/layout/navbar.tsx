@@ -31,6 +31,7 @@ import {
   Phone,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import Image from "next/image"
 
 const NAV_LINKS = [
   { href: ROUTES.HOME, label: "Home", icon: Home },
@@ -55,12 +56,13 @@ export function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-8">
           <Link href={ROUTES.HOME} className="flex items-center gap-2">
-            <Building2 className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">CytyFlix</span>
+            <Image src={'/applogo.png'} alt="Logo" width={300} height={300} className="h-12 w-24 text-primary" />
+            {/* <Building2 className="h-6 w-6 text-primary" />
+            <span className="text-xl font-bold">CytyFlix</span> */}
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
