@@ -10,6 +10,7 @@ export interface Property {
   currency: string
   address: string
   city: string
+  lga: string
   state: string
   country: string
   latitude?: number
@@ -37,6 +38,7 @@ export interface CreatePropertyRequest {
   currency?: string
   address: string
   city: string
+  lga: string
   state: string
   country?: string
   latitude?: number
@@ -54,6 +56,7 @@ export interface UpdatePropertyRequest extends Partial<CreatePropertyRequest> {}
 
 export interface PropertyFilters {
   city?: string
+  lga?: string
   state?: string
   propertyType?: PropertyType
   listingType?: ListingType

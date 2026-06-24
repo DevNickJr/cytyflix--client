@@ -36,7 +36,7 @@ export default function InquiriesPage() {
       <h1 className="text-3xl font-bold mb-1">Inquiries</h1>
       <p className="text-muted-foreground mb-8">Manage your property inquiries</p>
 
-      <Tabs defaultValue="sent">
+      <Tabs defaultValue="sent" className={'flex flex-col'}>
         <TabsList>
           <TabsTrigger value="sent" className="gap-2">
             <Send className="h-4 w-4" />

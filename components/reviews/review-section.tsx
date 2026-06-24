@@ -11,6 +11,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Loader2, Trash2 } from "lucide-react"
 import { formatRelativeTime, getInitials } from "@/lib/utils"
+import Link from "next/link"
+import { ROUTES } from "@/lib/constants"
 
 interface ReviewSectionProps {
   propertyId: string
@@ -43,7 +45,7 @@ export function ReviewSection({ propertyId, ownerId }: ReviewSectionProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" id="reviews">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Reviews</h2>
         {summary && summary.count > 0 && (
@@ -82,7 +84,7 @@ export function ReviewSection({ propertyId, ownerId }: ReviewSectionProps) {
       {isLoading ? (
         <div className="text-center py-8 text-muted-foreground">Loading reviews...</div>
       ) : reviews.length === 0 ? (
-        <p className="text-muted-foreground text-sm">No reviews yet. Be the first to review this property.</p>
+        <p className="text-muted-foreground text-sm">No reviews yet. Be the first to <Link className="text-blue-500 underline" href={isAuthenticated ? '#reviews' : `${ROUTES.LOGIN}?path=${ROUTES.PROPERTY_DETAIL('f29f3212-ab27-4872-b2ce-f39373e95445')}`}>review this property.</Link></p>
       ) : (
         <div className="space-y-4">
           {reviews.map((review) => (

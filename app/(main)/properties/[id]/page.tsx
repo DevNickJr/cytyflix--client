@@ -231,20 +231,17 @@ export default function PropertyDetailPage({
 
         {/* Sidebar */}
         <div className="space-y-4">
-          <Card>
-            <CardContent className="p-4 space-y-3">
-              {isAuthenticated && (
-                <Button
-                  variant="outline"
-                  className="w-full gap-2"
-                  onClick={() => toggleSave.mutate(property.id)}
-                >
-                  <Heart className={`h-4 w-4 ${isSaved ? "fill-red-500 text-red-500" : ""}`} />
-                  {isSaved ? "Saved" : "Save Property"}
-                </Button>
+           {isAuthenticated && 
+            (
+              <Button
+                variant="outline"
+                className="w-full gap-2"
+                onClick={() => toggleSave.mutate(property.id)}
+              >
+                <Heart className={`h-4 w-4 ${isSaved ? "fill-red-500 text-red-500" : ""}`} />
+                {isSaved ? "Saved" : "Save Property"}
+              </Button>
               )}
-            </CardContent>
-          </Card>
 
           <Card>
             <CardHeader>

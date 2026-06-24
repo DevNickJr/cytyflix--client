@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { PropertyType, ListingType, PROPERTY_TYPE_LABELS, LISTING_TYPE_LABELS, NIGERIAN_STATES } from "@/lib/constants"
+import { useEffect, useState } from "react"
+import { PropertyType, ListingType, PROPERTY_TYPE_LABELS, LISTING_TYPE_LABELS } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ImageUpload } from "@/components/shared/image-upload"
 import { Loader2 } from "lucide-react"
 import type { CreatePropertyRequest, Property } from "@/types/property"
+import { usePlaces } from "@/hooks/usePlaces"
 
 interface PropertyFormProps {
   initialData?: Property
@@ -29,6 +30,7 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
     currency: initialData?.currency ?? "NGN",
     address: initialData?.address ?? "",
     city: initialData?.city ?? "",
+    lga: initialData?.lga ?? "",
     state: initialData?.state ?? "",
     country: initialData?.country ?? "Nigeria",
     bedrooms: initialData?.bedrooms ?? 1,
@@ -38,6 +40,14 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
     interiorImages: initialData?.interiorImages ?? [],
     exteriorImages: initialData?.exteriorImages ?? [],
     streetImages: initialData?.streetImages ?? [],
+  })
+
+  const { cities, lgas, states } = usePlaces({
+    city: form.city,
+    lga: form.lga,
+    state: form.state,
+    resetLga: () =>  updateField('lga', ''),
+    resetCity: () => updateField('city', ''),
   })
 
   const [amenityInput, setAmenityInput] = useState("")
@@ -123,26 +133,44 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
           <CardTitle>Location</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="address">Address</Label>
-            <Input id="address" value={form.address} onChange={(e) => updateField("address", e.target.value)} required minLength={5} placeholder="Street address" />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="space-y-2 w-full">
               <Label>State</Label>
               <Select value={form.state} onValueChange={(val) => val && updateField("state", val)}>
-                <SelectTrigger><SelectValue placeholder="Select state" /></SelectTrigger>
-                <SelectContent>
-                  {NIGERIAN_STATES.map((state) => (
-                    <SelectItem key={state} value={state}>{state}</SelectItem>
+                <SelectTrigger className={'w-full'}><SelectValue placeholder="Select state" /></SelectTrigger>
+                <SelectContent className={'w-full'}>
+                  {states.map((state) => (
+                    <SelectItem key={state?.state} value={state?.state}>{state?.state}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="city">City</Label>
-              <Input id="city" value={form.city} onChange={(e) => updateField("city", e.target.value)} required placeholder="e.g. Lagos" />
+            <div className="space-y-2 w-full">
+              <Label>lgas</Label>
+              <Select disabled={!form.state} value={form.lga} onValueChange={(val) => val && updateField("lga", val)}>
+                <SelectTrigger className={'w-full'}><SelectValue placeholder="Select lga" /></SelectTrigger>
+                <SelectContent className={'w-full'}>
+                  {lgas.map((lga) => (
+                    <SelectItem key={lga?.name} value={lga?.name}>{lga?.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
+            <div className="space-y-2 w-full">
+              <Label>City/Ward</Label>
+              <Select value={form.city} disabled={!form.state || !form.lga} onValueChange={(val) => val && updateField("city", val)}>
+                <SelectTrigger className={'w-full'}><SelectValue placeholder="Select city" /></SelectTrigger>
+                <SelectContent className={'w-full'}>
+                  {cities.map((city) => (
+                    <SelectItem key={city?.name} value={city?.name}>{city?.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="address">Address</Label>
+            <Textarea id="address" disabled={!form.state || !form.city}  value={form.address} onChange={(e) => updateField("address", e.target.value)} required minLength={5} placeholder="Street address" />
           </div>
         </CardContent>
       </Card>

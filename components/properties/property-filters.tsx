@@ -1,6 +1,6 @@
 "use client"
 
-import { PropertyType, ListingType, PROPERTY_TYPE_LABELS, LISTING_TYPE_LABELS, NIGERIAN_STATES } from "@/lib/constants"
+import { PropertyType, ListingType, PROPERTY_TYPE_LABELS, LISTING_TYPE_LABELS } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent } from "@/components/ui/card"
 import { X } from "lucide-react"
 import type { PropertyFilters as PropertyFiltersType } from "@/types/property"
+import { usePlaces } from "@/hooks/usePlaces"
 
 interface PropertyFiltersProps {
   filters: PropertyFiltersType
@@ -19,6 +20,14 @@ export function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFi
   const hasActiveFilters = filters.city || filters.state || filters.propertyType ||
     filters.listingType || filters.minPrice || filters.maxPrice ||
     filters.bedrooms || filters.bathrooms
+
+    const { cities, lgas, states } = usePlaces({
+      city: filters.city,
+      lga: filters.lga,
+      state: filters.state,
+      resetLga: () => onFilterChange({ lga: undefined }),
+      resetCity: () => onFilterChange({ city: undefined }),
+    })
 
   return (
     <Card>
@@ -40,31 +49,51 @@ export function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFi
               value={filters.state || ""}
               onValueChange={(val) => onFilterChange({ state: val || undefined })}
             >
-              <SelectTrigger><SelectValue placeholder="All States" /></SelectTrigger>
+              <SelectTrigger className={'w-full'}><SelectValue placeholder="All States" /></SelectTrigger>
               <SelectContent>
-                {NIGERIAN_STATES.map((state) => (
-                  <SelectItem key={state} value={state}>{state}</SelectItem>
+                {states.map((state) => (
+                  <SelectItem key={state?.state} value={state?.state}>{state?.state}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-
           <div className="space-y-1.5">
-            <Label className="text-xs">City</Label>
-            <Input
-              placeholder="Enter city"
-              value={filters.city || ""}
-              onChange={(e) => onFilterChange({ city: e.target.value || undefined })}
-            />
+            <Label className="text-xs">LGA</Label>
+            <Select
+              value={filters.lga || ""}
+              onValueChange={(val) => onFilterChange({ lga: val || undefined })}
+              disabled={!filters.state}
+            >
+              <SelectTrigger className={'w-full'}><SelectValue placeholder={filters.state ? "Enter LGA" : "Select a state"} /></SelectTrigger>
+              <SelectContent>
+                {lgas.map((lga) => (
+                  <SelectItem key={lga?.name} value={lga?.name}>{lga?.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-
+          <div className="space-y-1.5">
+            <Label className="text-xs">City/Ward</Label>
+            <Select
+              value={filters.city || ""}
+              onValueChange={(val) => onFilterChange({ city: val || undefined })}
+              disabled={!filters.state || !filters.lga}
+            >
+              <SelectTrigger className={'w-full'}><SelectValue placeholder={filters.state ? "Enter City" : "Select an LGA"} /></SelectTrigger>
+              <SelectContent>
+                {cities.map((city) => (
+                  <SelectItem key={city?.name} value={city?.name}>{city?.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Property Type</Label>
             <Select
               value={filters.propertyType || ""}
               onValueChange={(val) => onFilterChange({ propertyType: (val || undefined) as PropertyType | undefined })}
             >
-              <SelectTrigger><SelectValue placeholder="All Types" /></SelectTrigger>
+              <SelectTrigger className={'w-full'}><SelectValue placeholder="All Types" /></SelectTrigger>
               <SelectContent>
                 {Object.entries(PROPERTY_TYPE_LABELS).map(([value, label]) => (
                   <SelectItem key={value} value={value}>{label}</SelectItem>
@@ -72,14 +101,13 @@ export function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFi
               </SelectContent>
             </Select>
           </div>
-
           <div className="space-y-1.5">
             <Label className="text-xs">Listing Type</Label>
             <Select
               value={filters.listingType || ""}
               onValueChange={(val) => onFilterChange({ listingType: (val || undefined) as ListingType | undefined })}
             >
-              <SelectTrigger><SelectValue placeholder="All Listings" /></SelectTrigger>
+              <SelectTrigger className={'w-full'}><SelectValue placeholder="All Listings" /></SelectTrigger>
               <SelectContent>
                 {Object.entries(LISTING_TYPE_LABELS).map(([value, label]) => (
                   <SelectItem key={value} value={value}>{label}</SelectItem>
@@ -87,7 +115,6 @@ export function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFi
               </SelectContent>
             </Select>
           </div>
-
           <div className="space-y-1.5">
             <Label className="text-xs">Min Price</Label>
             <Input
@@ -97,7 +124,6 @@ export function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFi
               onChange={(e) => onFilterChange({ minPrice: e.target.value ? Number(e.target.value) : undefined })}
             />
           </div>
-
           <div className="space-y-1.5">
             <Label className="text-xs">Max Price</Label>
             <Input
@@ -114,7 +140,7 @@ export function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFi
               value={filters.bedrooms?.toString() || ""}
               onValueChange={(val) => onFilterChange({ bedrooms: val ? Number(val) : undefined })}
             >
-              <SelectTrigger><SelectValue placeholder="Any" /></SelectTrigger>
+              <SelectTrigger className={'w-full'}><SelectValue placeholder="Any" /></SelectTrigger>
               <SelectContent>
                 {[1, 2, 3, 4, 5].map((n) => (
                   <SelectItem key={n} value={n.toString()}>{n}+</SelectItem>
@@ -129,7 +155,7 @@ export function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFi
               value={filters.bathrooms?.toString() || ""}
               onValueChange={(val) => onFilterChange({ bathrooms: val ? Number(val) : undefined })}
             >
-              <SelectTrigger><SelectValue placeholder="Any" /></SelectTrigger>
+              <SelectTrigger className={'w-full'}><SelectValue placeholder="Any" /></SelectTrigger>
               <SelectContent>
                 {[1, 2, 3, 4].map((n) => (
                   <SelectItem key={n} value={n.toString()}>{n}+</SelectItem>
@@ -137,27 +163,27 @@ export function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFi
               </SelectContent>
             </Select>
           </div>
+          <div className="space-y-1.5">
+            <Label className="text-xs">Sort by</Label>
+            <Select
+              value={`${filters.sortBy}-${filters.sortOrder}`}
+              onValueChange={(val) => {
+                if (!val) return
+                const [sortBy, sortOrder] = val.split("-") as ["createdAt" | "price", "ASC" | "DESC"]
+                onFilterChange({ sortBy, sortOrder })
+              }}
+            >
+              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="createdAt-DESC">Newest First</SelectItem>
+                <SelectItem value="createdAt-ASC">Oldest First</SelectItem>
+                <SelectItem value="price-ASC">Price: Low to High</SelectItem>
+                <SelectItem value="price-DESC">Price: High to Low</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3 mt-4">
-          <Label className="text-xs">Sort by</Label>
-          <Select
-            value={`${filters.sortBy}-${filters.sortOrder}`}
-            onValueChange={(val) => {
-              if (!val) return
-              const [sortBy, sortOrder] = val.split("-") as ["createdAt" | "price", "ASC" | "DESC"]
-              onFilterChange({ sortBy, sortOrder })
-            }}
-          >
-            <SelectTrigger className="w-[180px]"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="createdAt-DESC">Newest First</SelectItem>
-              <SelectItem value="createdAt-ASC">Oldest First</SelectItem>
-              <SelectItem value="price-ASC">Price: Low to High</SelectItem>
-              <SelectItem value="price-DESC">Price: High to Low</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
       </CardContent>
     </Card>
   )

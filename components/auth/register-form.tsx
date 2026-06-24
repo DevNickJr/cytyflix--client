@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 import { ROUTES } from "@/lib/constants"
@@ -20,6 +20,8 @@ export function RegisterForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const searchParams = useSearchParams(); 
+  const prevPath = searchParams.get('path') || ''
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,7 +36,7 @@ export function RegisterForm() {
     try {
       await register({ email, password })
       toast.success("Account created! Please sign in.")
-      router.push(ROUTES.LOGIN)
+      router.push(`${ROUTES.LOGIN}?path=${prevPath}`)
     } catch (error) {
       const apiError = error as ApiError
       toast.error(apiError.message || "Registration failed")
@@ -95,7 +97,7 @@ export function RegisterForm() {
           </Button>
           <p className="text-sm text-muted-foreground text-center">
             Already have an account?{" "}
-            <Link href={ROUTES.LOGIN} className="text-primary underline-offset-4 hover:underline">
+            <Link href={`${ROUTES.LOGIN}?path=${prevPath}`} className="text-primary underline-offset-4 hover:underline">
               Sign in
             </Link>
           </p>

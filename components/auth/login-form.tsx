@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 import { ROUTES } from "@/lib/constants"
@@ -21,6 +21,8 @@ export function LoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [rememberMe, setRememberMe] = useState(false)
+  const searchParams = useSearchParams(); 
+  const prevPath = searchParams.get('path') || ''
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,7 +31,7 @@ export function LoginForm() {
     try {
       await login({ email, password, rememberMe })
       toast.success("Welcome back!")
-      router.push(ROUTES.DASHBOARD)
+      router.push(prevPath || ROUTES.DASHBOARD)
     } catch (error) {
       const apiError = error as ApiError
       toast.error(apiError.message || "Invalid credentials")
@@ -87,7 +89,7 @@ export function LoginForm() {
           </Button>
           <p className="text-sm text-muted-foreground text-center">
             Don&apos;t have an account?{" "}
-            <Link href={ROUTES.REGISTER} className="text-primary underline-offset-4 hover:underline">
+            <Link  href={`${ROUTES.REGISTER}?path=${prevPath}`} className="text-primary underline-offset-4 hover:underline">
               Create one
             </Link>
           </p>
