@@ -44,10 +44,12 @@ export default function PropertyDetailPage({
   const toggleSave = useToggleSave()
   const sendInquiry = useSendInquiry()
   const [message, setMessage] = useState("")
-
-  if (isLoading) return <PageLoader />
-
+  
+  const [reportOpen, setReportOpen] = useState(false)
+  const isSaved = saveData?.data?.isSaved ?? false
   const property = data?.data
+  
+  if (isLoading) return <PageLoader />
   if (!property) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
@@ -58,8 +60,7 @@ export default function PropertyDetailPage({
     )
   }
 
-  const isSaved = saveData?.data?.isSaved ?? false
-  const [reportOpen, setReportOpen] = useState(false)
+
 
   const handleInquiry = async () => {
     if (!isAuthenticated) {
