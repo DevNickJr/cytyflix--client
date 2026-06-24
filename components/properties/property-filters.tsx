@@ -14,9 +14,10 @@ interface PropertyFiltersProps {
   filters: PropertyFiltersType
   onFilterChange: (filters: Partial<PropertyFiltersType>) => void
   onReset: () => void
+  forMobile?: boolean
 }
 
-export function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFiltersProps) {
+export function PropertyFilters({ filters, onFilterChange, onReset, forMobile }: PropertyFiltersProps) {
   const hasActiveFilters = filters.city || filters.state || filters.propertyType ||
     filters.listingType || filters.minPrice || filters.maxPrice ||
     filters.bedrooms || filters.bathrooms
@@ -30,7 +31,7 @@ export function PropertyFilters({ filters, onFilterChange, onReset }: PropertyFi
     })
 
   return (
-    <Card>
+    <Card className={forMobile ? 'md:hidden overflow-y-auto h-full' : 'hidden md:block'}>
       <CardContent className="p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold">Filters</h3>

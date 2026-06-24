@@ -6,6 +6,7 @@ import { PropertyFilters } from "@/components/properties/property-filters"
 import { Pagination } from "@/components/shared/pagination"
 import { PageLoader } from "@/components/shared/loading-spinner"
 import { Search } from "lucide-react"
+import PropertyMobileFilter from "@/components/properties/property-mobile-filter"
 
 export default function PropertiesPage() {
   const { data, isLoading, filters, updateFilters, resetFilters } = useProperties()
@@ -48,6 +49,11 @@ export default function PropertiesPage() {
           </>
         )}
       </div>
+      <PropertyMobileFilter 
+        filters={filters}
+        onFilterChange={updateFilters}
+        onReset={resetFilters}
+      />
     </div>
   )
 }
