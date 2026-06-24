@@ -60,7 +60,7 @@ export function Navbar() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-8">
           <Link href={ROUTES.HOME} className="flex items-center gap-2">
-            <Image src={'/applogo.png'} alt="Logo" width={300} height={300} className="h-12 w-24 text-primary" />
+            <Image src={'/applogo.png'} loading="eager" alt="Logo" width={300} height={300} className="h-12 w-24 text-primary" />
             {/* <Building2 className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold">CytyFlix</span> */}
           </Link>

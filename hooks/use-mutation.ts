@@ -18,6 +18,7 @@ export function useMutationAction<TData = unknown, TVariables = void>(
   const { successMessage, errorMessage, invalidateKeys, ...options } = config || {}
 
   return useReactQueryMutation<TData, ApiError, TVariables>({
+    ...options,
     mutationFn,
     onSuccess: (...args) => {
       if (successMessage) toast.success(successMessage)
@@ -32,6 +33,5 @@ export function useMutationAction<TData = unknown, TVariables = void>(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(options?.onError as any)?.(...args)
     },
-    ...options,
   })
 }

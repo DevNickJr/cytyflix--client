@@ -24,9 +24,12 @@ import {
   Calendar,
   CheckCircle,
   Send,
+  Flag,
 } from "lucide-react"
 import { toast } from "sonner"
 import type { ApiError } from "@/types/api"
+import { ReviewSection } from "@/components/reviews/review-section"
+import { ReportDialog } from "@/components/reviews/report-dialog"
 
 export default function PropertyDetailPage({
   params,
@@ -56,6 +59,7 @@ export default function PropertyDetailPage({
   }
 
   const isSaved = saveData?.data?.isSaved ?? false
+  const [reportOpen, setReportOpen] = useState(false)
 
   const handleInquiry = async () => {
     if (!isAuthenticated) {
@@ -84,30 +88,71 @@ export default function PropertyDetailPage({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          {/* Image Gallery */}
-          <div className="rounded-xl overflow-hidden bg-muted">
-            {property.images.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
-                <img
-                  src={property.images[0]}
-                  alt={property.title}
-                  className="w-full aspect-[4/3] object-cover md:row-span-2"
-                />
-                {property.images.slice(1, 3).map((img, i) => (
+          {/* Image Gallery by Category */}
+          {(() => {
+            const allImages = [
+              ...property.exteriorImages,
+              ...property.interiorImages,
+              ...property.streetImages,
+            ]
+            return allImages.length > 0 ? (
+              <div className="rounded-xl overflow-hidden bg-muted">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
                   <img
-                    key={i}
-                    src={img}
-                    alt={`${property.title} ${i + 2}`}
-                    className="w-full aspect-video object-cover hidden md:block"
+                    src={allImages[0]}
+                    alt={property.title}
+                    className="w-full aspect-[4/3] object-cover md:row-span-2"
                   />
-                ))}
+                  {allImages.slice(1, 3).map((img, i) => (
+                    <img
+                      key={i}
+                      src={img}
+                      alt={`${property.title} ${i + 2}`}
+                      className="w-full aspect-video object-cover hidden md:block"
+                    />
+                  ))}
+                </div>
               </div>
             ) : (
-              <div className="aspect-video flex items-center justify-center">
+              <div className="rounded-xl overflow-hidden bg-muted aspect-video flex items-center justify-center">
                 <Building className="h-16 w-16 text-muted-foreground/30" />
               </div>
-            )}
-          </div>
+            )
+          })()}
+
+          {/* Categorized Image Sections */}
+          {property.exteriorImages.length > 0 && (
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Exterior</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {property.exteriorImages.map((img, i) => (
+                  <img key={i} src={img} alt={`Exterior ${i + 1}`} className="w-full aspect-video object-cover rounded-lg" />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {property.interiorImages.length > 0 && (
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Interior</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {property.interiorImages.map((img, i) => (
+                  <img key={i} src={img} alt={`Interior ${i + 1}`} className="w-full aspect-video object-cover rounded-lg" />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {property.streetImages.length > 0 && (
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Street / Landmarks</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {property.streetImages.map((img, i) => (
+                  <img key={i} src={img} alt={`Street ${i + 1}`} className="w-full aspect-video object-cover rounded-lg" />
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Details */}
           <div>
@@ -176,6 +221,10 @@ export default function PropertyDetailPage({
                 </div>
               </>
             )}
+
+            <Separator className="my-6" />
+
+            <ReviewSection propertyId={property.id} ownerId={property.ownerId} />
           </div>
         </div>
 
@@ -217,6 +266,23 @@ export default function PropertyDetailPage({
               </Button>
             </CardContent>
           </Card>
+
+          {isAuthenticated && (
+            <Button
+              variant="outline"
+              className="w-full gap-2 text-muted-foreground"
+              onClick={() => setReportOpen(true)}
+            >
+              <Flag className="h-4 w-4" />
+              Report Property
+            </Button>
+          )}
+
+          <ReportDialog
+            propertyId={property.id}
+            open={reportOpen}
+            onOpenChange={setReportOpen}
+          />
         </div>
       </div>
     </div>

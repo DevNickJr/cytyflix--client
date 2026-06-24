@@ -53,7 +53,7 @@ export default function ContactPage() {
               <Phone className="h-5 w-5 text-primary mt-0.5" />
               <div>
                 <p className="font-medium text-sm">Phone</p>
-                <p className="text-sm text-muted-foreground">+234 800 CYTYFLIX</p>
+                <p className="text-sm text-muted-foreground">+234 90 333 98824</p>
               </div>
             </CardContent>
           </Card>
@@ -62,7 +62,7 @@ export default function ContactPage() {
               <MapPin className="h-5 w-5 text-primary mt-0.5" />
               <div>
                 <p className="font-medium text-sm">Office</p>
-                <p className="text-sm text-muted-foreground">Lagos, Nigeria</p>
+                <p className="text-sm text-muted-foreground">No. 8 Johnson Adegoke street, Ajah, Lagos, Nigeria</p>
               </div>
             </CardContent>
           </Card>

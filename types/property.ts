@@ -17,7 +17,10 @@ export interface Property {
   bedrooms: number
   bathrooms: number
   amenities: string[]
-  images: string[]
+  proofOfOwnership: string[]
+  interiorImages: string[]
+  exteriorImages: string[]
+  streetImages: string[]
   isAvailable: boolean
   isFeatured: boolean
   ownerId: string
@@ -41,7 +44,10 @@ export interface CreatePropertyRequest {
   bedrooms?: number
   bathrooms?: number
   amenities?: string[]
-  images?: string[]
+  proofOfOwnership: string[]
+  interiorImages: string[]
+  exteriorImages: string[]
+  streetImages?: string[]
 }
 
 export interface UpdatePropertyRequest extends Partial<CreatePropertyRequest> {}

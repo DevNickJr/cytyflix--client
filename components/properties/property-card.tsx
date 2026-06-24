@@ -30,6 +30,8 @@ export function PropertyCard({ property, isSaved }: PropertyCardProps) {
     }
   }
 
+  const thumbnail = property.exteriorImages?.[0] || property.interiorImages?.[0] || property.proofOfOwnership?.[0]
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -39,9 +41,9 @@ export function PropertyCard({ property, isSaved }: PropertyCardProps) {
       <Link href={ROUTES.PROPERTY_DETAIL(property.id)}>
         <Card className="overflow-hidden group cursor-pointer hover:shadow-md transition-shadow">
           <div className="relative aspect-[16/10] bg-muted overflow-hidden">
-            {property.images.length > 0 ? (
+            {thumbnail ? (
               <img
-                src={property.images[0]}
+                src={thumbnail}
                 alt={property.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />

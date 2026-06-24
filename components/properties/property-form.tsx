@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ImageUpload } from "@/components/shared/image-upload"
 import { Loader2 } from "lucide-react"
 import type { CreatePropertyRequest, Property } from "@/types/property"
 
@@ -33,11 +34,13 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
     bedrooms: initialData?.bedrooms ?? 1,
     bathrooms: initialData?.bathrooms ?? 1,
     amenities: initialData?.amenities ?? [],
-    images: initialData?.images ?? [],
+    proofOfOwnership: initialData?.proofOfOwnership ?? [],
+    interiorImages: initialData?.interiorImages ?? [],
+    exteriorImages: initialData?.exteriorImages ?? [],
+    streetImages: initialData?.streetImages ?? [],
   })
 
   const [amenityInput, setAmenityInput] = useState("")
-  const [imageInput, setImageInput] = useState("")
 
   const updateField = <K extends keyof CreatePropertyRequest>(key: K, value: CreatePropertyRequest[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -52,17 +55,6 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
 
   const removeAmenity = (amenity: string) => {
     updateField("amenities", form.amenities?.filter((a) => a !== amenity) ?? [])
-  }
-
-  const addImage = () => {
-    if (imageInput.trim()) {
-      updateField("images", [...(form.images ?? []), imageInput.trim()])
-      setImageInput("")
-    }
-  }
-
-  const removeImage = (url: string) => {
-    updateField("images", form.images?.filter((i) => i !== url) ?? [])
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -179,23 +171,40 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
 
       <Card>
         <CardHeader>
-          <CardTitle>Images</CardTitle>
+          <CardTitle>Property Images</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-2">
-            <Input value={imageInput} onChange={(e) => setImageInput(e.target.value)} placeholder="Image URL" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addImage() } }} />
-            <Button type="button" variant="outline" onClick={addImage}>Add</Button>
-          </div>
-          {form.images && form.images.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {form.images.map((url) => (
-                <div key={url} className="relative group aspect-video bg-muted rounded-lg overflow-hidden">
-                  <img src={url} alt="" className="w-full h-full object-cover" />
-                  <button type="button" onClick={() => removeImage(url)} className="absolute top-1 right-1 bg-black/60 text-white rounded-full w-6 h-6 text-xs opacity-0 group-hover:opacity-100 transition-opacity">&times;</button>
-                </div>
-              ))}
-            </div>
-          )}
+        <CardContent className="space-y-6">
+          <ImageUpload
+            value={form.proofOfOwnership}
+            onChange={(urls) => updateField("proofOfOwnership", urls)}
+            maxFiles={5}
+            label="Proof of Ownership / Mandate Letter"
+            required
+            pathPrefix="properties/proof-of-ownership"
+          />
+          <ImageUpload
+            value={form.interiorImages}
+            onChange={(urls) => updateField("interiorImages", urls)}
+            maxFiles={10}
+            label="Interior Images"
+            required
+            pathPrefix="properties/interior"
+          />
+          <ImageUpload
+            value={form.exteriorImages}
+            onChange={(urls) => updateField("exteriorImages", urls)}
+            maxFiles={10}
+            label="Exterior Images"
+            required
+            pathPrefix="properties/exterior"
+          />
+          <ImageUpload
+            value={form.streetImages ?? []}
+            onChange={(urls) => updateField("streetImages", urls)}
+            maxFiles={5}
+            label="Street Sign / Nearby Landmarks"
+            pathPrefix="properties/street"
+          />
         </CardContent>
       </Card>
 

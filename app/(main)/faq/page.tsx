@@ -26,7 +26,7 @@ const faqs = [
   {
     question: "How do I list a property?",
     answer:
-      "Sign up as a property owner or agent, then go to your Dashboard and click 'Create Property'. Fill in the property details including title, description, location, price, images, and amenities. Your listing will be published immediately.",
+      "Sign up as a property owner or agent, complete your KYC and upload all relevant documents. After you have been verified, go to your Dashboard and click 'Create Property'. Fill in the property details including title, description, location, price, images, and amenities. Your listing will be published immediately",
   },
   {
     question: "How do inquiries work?",

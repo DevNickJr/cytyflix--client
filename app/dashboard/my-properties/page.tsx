@@ -58,8 +58,8 @@ export default function MyPropertiesPage() {
               <CardContent className="p-4">
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="w-full sm:w-40 h-28 rounded-lg overflow-hidden bg-muted shrink-0">
-                    {property.images.length > 0 ? (
-                      <img src={property.images[0]} alt={property.title} className="w-full h-full object-cover" />
+                    {(property.exteriorImages?.length > 0 || property.interiorImages?.length > 0) ? (
+                      <img src={property.exteriorImages?.[0] || property.interiorImages?.[0]} alt={property.title} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <Building2 className="h-8 w-8 text-muted-foreground/40" />

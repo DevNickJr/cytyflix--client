@@ -17,6 +17,13 @@ export const ROUTES = {
   DASHBOARD_SAVED: "/dashboard/saved",
   DASHBOARD_INQUIRIES: "/dashboard/inquiries",
   DASHBOARD_NOTIFICATIONS: "/dashboard/notifications",
+  DASHBOARD_BECOME_AGENT: "/dashboard/become-agent",
+  DASHBOARD_BOOKINGS: "/dashboard/bookings",
+  DASHBOARD_BOOKING_DETAIL: (id: string) => `/dashboard/bookings/${id}`,
+  DASHBOARD_ADMIN_VERIFICATIONS: "/dashboard/admin/verifications",
+  DASHBOARD_ADMIN_REPORTS: "/dashboard/admin/reports",
+  AGENTS: "/agents",
+  AGENT_DETAIL: (id: string) => `/agents/${id}`,
 } as const
 
 export enum PropertyType {
@@ -68,6 +75,48 @@ export const ROLE_LABELS: Record<RolesEnum, string> = {
 }
 
 export const OWNER_ROLES = [RolesEnum.PROPERTY_OWNER, RolesEnum.AGENT, RolesEnum.ADMIN]
+
+export enum VerificationStatus {
+  PENDING = "pending",
+  APPROVED = "approved",
+  REJECTED = "rejected",
+}
+
+export enum ReportReason {
+  MISLEADING = "misleading",
+  SCAM = "scam",
+  INAPPROPRIATE = "inappropriate",
+  DUPLICATE = "duplicate",
+  OTHER = "other",
+}
+
+export enum ReportStatus {
+  PENDING = "pending",
+  REVIEWED = "reviewed",
+  DISMISSED = "dismissed",
+}
+
+export enum BookingStatus {
+  PENDING = "pending",
+  CONFIRMED = "confirmed",
+  COMPLETED = "completed",
+  DISPUTED = "disputed",
+  CANCELLED = "cancelled",
+}
+
+export enum PaymentStatus {
+  PENDING = "pending",
+  PAID = "paid",
+  FAILED = "failed",
+}
+
+export const REPORT_REASON_LABELS: Record<ReportReason, string> = {
+  [ReportReason.MISLEADING]: "Misleading Information",
+  [ReportReason.SCAM]: "Potential Scam",
+  [ReportReason.INAPPROPRIATE]: "Inappropriate Content",
+  [ReportReason.DUPLICATE]: "Duplicate Listing",
+  [ReportReason.OTHER]: "Other",
+}
 
 export const NIGERIAN_STATES = [
   "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue",

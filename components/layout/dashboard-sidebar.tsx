@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
-import { ROUTES, OWNER_ROLES } from "@/lib/constants"
+import { ROUTES, OWNER_ROLES, RolesEnum } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import {
   LayoutDashboard,
@@ -13,16 +13,48 @@ import {
   MessageSquare,
   Bell,
   Plus,
+  ShieldCheck,
+  CalendarCheck,
+  ShieldAlert,
+  Flag,
 } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
 
-const SIDEBAR_LINKS = [
+type SidebarLink = {
+  href: string
+  label: string
+  icon: typeof LayoutDashboard
+  exact?: boolean
+  ownerOnly?: boolean
+  showFor?: (role: RolesEnum) => boolean
+}
+
+const SIDEBAR_LINKS: SidebarLink[] = [
   { href: ROUTES.DASHBOARD, label: "Overview", icon: LayoutDashboard, exact: true },
   { href: ROUTES.DASHBOARD_PROFILE, label: "Profile", icon: User },
   { href: ROUTES.DASHBOARD_MY_PROPERTIES, label: "My Properties", icon: Building2, ownerOnly: true },
   { href: ROUTES.DASHBOARD_SAVED, label: "Saved Listings", icon: Heart },
   { href: ROUTES.DASHBOARD_INQUIRIES, label: "Inquiries", icon: MessageSquare },
+  { href: ROUTES.DASHBOARD_BOOKINGS, label: "Bookings", icon: CalendarCheck },
   { href: ROUTES.DASHBOARD_NOTIFICATIONS, label: "Notifications", icon: Bell },
+  {
+    href: ROUTES.DASHBOARD_BECOME_AGENT,
+    label: "Become Agent",
+    icon: ShieldCheck,
+    showFor: (role) => role === RolesEnum.RENT_SEEKER || role === RolesEnum.PROPERTY_OWNER,
+  },
+  {
+    href: ROUTES.DASHBOARD_ADMIN_VERIFICATIONS,
+    label: "Verifications",
+    icon: ShieldAlert,
+    showFor: (role) => role === RolesEnum.ADMIN,
+  },
+  {
+    href: ROUTES.DASHBOARD_ADMIN_REPORTS,
+    label: "Reports",
+    icon: Flag,
+    showFor: (role) => role === RolesEnum.ADMIN,
+  },
 ]
 
 export function DashboardSidebar() {
@@ -36,12 +68,19 @@ export function DashboardSidebar() {
     return pathname.startsWith(href)
   }
 
+  const shouldShow = (link: SidebarLink) => {
+    if (link.ownerOnly && !isOwner) return false
+    if (link.showFor && user) return link.showFor(user.role)
+    if (link.showFor && !user) return false
+    return true
+  }
+
   return (
     <aside className="w-64 shrink-0 border-r bg-muted/30 hidden lg:block">
       <div className="flex flex-col h-full p-4">
         <div className="space-y-1">
           {SIDEBAR_LINKS.map((link) => {
-            if (link.ownerOnly && !isOwner) return null
+            if (!shouldShow(link)) return null
             return (
               <Link
                 key={link.href}
@@ -78,11 +117,18 @@ export function DashboardMobileNav() {
   const { user } = useAuth()
   const isOwner = user && OWNER_ROLES.includes(user.role)
 
+  const shouldShow = (link: SidebarLink) => {
+    if (link.ownerOnly && !isOwner) return false
+    if (link.showFor && user) return link.showFor(user.role)
+    if (link.showFor && !user) return false
+    return true
+  }
+
   return (
     <nav className="lg:hidden border-b overflow-x-auto">
       <div className="flex items-center gap-1 p-2 min-w-max">
         {SIDEBAR_LINKS.map((link) => {
-          if (link.ownerOnly && !isOwner) return null
+          if (!shouldShow(link)) return null
           const active = link.exact
             ? pathname === link.href
             : pathname.startsWith(link.href)
