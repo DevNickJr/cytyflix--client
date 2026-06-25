@@ -33,6 +33,8 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
     lga: initialData?.lga ?? "",
     state: initialData?.state ?? "",
     country: initialData?.country ?? "Nigeria",
+    latitude: initialData?.latitude,
+    longitude: initialData?.longitude,
     bedrooms: initialData?.bedrooms ?? 1,
     bathrooms: initialData?.bathrooms ?? 1,
     amenities: initialData?.amenities ?? [],
@@ -49,6 +51,18 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
     resetLga: () =>  updateField('lga', ''),
     resetCity: () => updateField('city', ''),
   })
+
+  useEffect(() => {
+    if (!form.city) {
+      updateField('latitude', undefined)
+      updateField('longitude', undefined)
+      return
+    };
+    const city = cities.find(c => c.name === form.city)
+
+    updateField('latitude', city?.latitude)
+    updateField('longitude', city?.longitude)
+  }, [form.city])
 
   const [amenityInput, setAmenityInput] = useState("")
 

@@ -22,7 +22,9 @@ export function usePlaces({
     }[]>([]);
 
     useEffect(() => {
-        if (!state) setLgas([]);
+        if (!state) {
+            return setLgas([]);
+        }
 
         const lgas = NIGERIAN_STATES?.find(stateF => stateF.state === state)
         setLgas(lgas?.lgas || [])
@@ -34,7 +36,9 @@ export function usePlaces({
     }, [state])
 
     useEffect(() => {
-        if (!lga) setCities([]);
+        if (!lga) {
+            return setCities([]);
+        }
 
         const cities = lgas?.find(lgaF => lgaF.name == lga)
         setCities(cities?.wards || [])
