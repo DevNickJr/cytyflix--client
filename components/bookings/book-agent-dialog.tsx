@@ -15,15 +15,18 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Loader2 } from "lucide-react"
 import { formatPrice } from "@/lib/utils"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { Property } from "@/types/property"
 
 interface BookAgentDialogProps {
   agentId: string
   propertyId?: string
   open: boolean
   onOpenChange: (open: boolean) => void
+  properties: Property[]
 }
 
-export function BookAgentDialog({ agentId, propertyId, open, onOpenChange }: BookAgentDialogProps) {
+export function BookAgentDialog({ agentId, propertyId, open, onOpenChange, properties }: BookAgentDialogProps) {
   const createBooking = useCreateBooking()
   const [scheduledDate, setScheduledDate] = useState("")
   const [scheduledTime, setScheduledTime] = useState("")
@@ -51,16 +54,26 @@ export function BookAgentDialog({ agentId, propertyId, open, onOpenChange }: Boo
         <DialogHeader>
           <DialogTitle>Book Agent for Property Tour</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          {!propertyId && (
-            <div className="space-y-2">
-              <Label>Property ID</Label>
-              <Input
-                placeholder="Enter the property ID you want to visit"
-                value={linkedPropertyId}
-                onChange={(e) => setLinkedPropertyId(e.target.value)}
-              />
-            </div>
+        <div className="space-y-4 w-full relative">
+          {(
+          <Select
+            value={linkedPropertyId}
+            onValueChange={(val) => val && setLinkedPropertyId(val)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Property" />
+            </SelectTrigger>
+            <SelectContent >
+                <SelectItem value={'any'}>
+                  Any Available
+                </SelectItem>
+              {properties?.map((property) => (
+                <SelectItem key={property.id} value={property.id}>
+                  {property.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           )}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">

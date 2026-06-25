@@ -52,7 +52,7 @@ export function Navbar() {
 
   const handleLogout = () => {
     logout()
-    router.push(ROUTES.HOME)
+    // router.push(ROUTES.HOME)
   }
 
   return (

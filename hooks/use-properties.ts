@@ -16,7 +16,7 @@ export function useProperties(initialFilters?: PropertyFilters) {
   })
 
   const query = useFetch({
-    queryKey: ["properties", JSON.stringify(filters)],
+    queryKey: ["properties", filters],
     queryFn: () => propertyService.getProperties(filters)
   })
 

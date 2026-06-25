@@ -11,6 +11,9 @@ export interface UserProfile {
   budgetMin?: number
   budgetMax?: number
   profileImage?: string
+  operatingStates?: string[]
+  operatingLgas?: string[]
+  operatingCities?: string[]
 }
 
 export interface User {
@@ -32,4 +35,7 @@ export interface UpdateProfileRequest {
   budgetMin?: number
   budgetMax?: number
   profileImage?: string
+  operatingStates?: string[]
+  operatingLgas?: string[]
+  operatingCities?: string[]
 }

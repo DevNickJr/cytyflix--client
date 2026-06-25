@@ -31,25 +31,23 @@ const PropertyMobileFilter = ({ filters, onFilterChange, onReset }: PropertyFilt
           <span>Filter</span>
         </button>
       </nav>
-      <div className='h-full w-full fixed overflow-auto top-0 left-0'>
-        <Sheet open={moreOpen} onOpenChange={setMoreOpen}>
-          <SheetContent side="bottom" className="rounded-t-2xl flex flex-col flex-1 h-full overflow-auto">
-            <SheetHeader>
-            </SheetHeader>
-            <PropertyFilters
-              filters={filters}
-              onFilterChange={onFilterChange}
-              onReset={onReset}
-              forMobile={true}
-            />
-            <Button
-             onClick={() => setMoreOpen(false)}
-             >
-              Done
-            </Button>
-          </SheetContent>
-        </Sheet>
-      </div>
+      <Sheet open={moreOpen} onOpenChange={setMoreOpen}>
+        <SheetContent side="bottom" className="rounded-t-2xl flex flex-col flex-1 h-full overflow-auto">
+          <SheetHeader>
+          </SheetHeader>
+          <PropertyFilters
+            filters={filters}
+            onFilterChange={onFilterChange}
+            onReset={onReset}
+            forMobile={true}
+          />
+          <Button
+            onClick={() => setMoreOpen(false)}
+            >
+            Done
+          </Button>
+        </SheetContent>
+      </Sheet>
     </>
   )
 }

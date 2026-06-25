@@ -52,6 +52,7 @@ export function PropertyFilters({ filters, onFilterChange, onReset, forMobile }:
             >
               <SelectTrigger className={'w-full'}><SelectValue placeholder="All States" /></SelectTrigger>
               <SelectContent>
+                  <SelectItem key="" value="">All</SelectItem>
                 {states.map((state) => (
                   <SelectItem key={state?.state} value={state?.state}>{state?.state}</SelectItem>
                 ))}

@@ -3,13 +3,17 @@
 import { useState, useEffect } from "react"
 import { useAuth } from "@/hooks/use-auth"
 import { useMutationAction } from "@/hooks/use-mutation"
+import { usePlaces } from "@/hooks/usePlaces"
 import { userService } from "@/services/user.service"
+import { RolesEnum } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
+import { Loader2, X } from "lucide-react"
 import type { UpdateProfileRequest } from "@/types/user"
 
 export default function ProfilePage() {
@@ -23,6 +27,21 @@ export default function ProfilePage() {
     budgetMin: undefined,
     budgetMax: undefined,
     profileImage: "",
+    operatingStates: [],
+    operatingLgas: [],
+    operatingCities: [],
+  })
+
+  const [selectedState, setSelectedState] = useState("")
+  const [selectedLga, setSelectedLga] = useState("")
+  const [selectedCity, setSelectedCity] = useState("")
+
+  const { states, lgas, cities } = usePlaces({
+    state: selectedState,
+    lga: selectedLga,
+    city: selectedCity,
+    resetLga: () => setSelectedLga(""),
+    resetCity: () => setSelectedCity(""),
   })
 
   useEffect(() => {
@@ -36,6 +55,9 @@ export default function ProfilePage() {
         budgetMin: user.profile.budgetMin ?? undefined,
         budgetMax: user.profile.budgetMax ?? undefined,
         profileImage: user.profile.profileImage ?? "",
+        operatingStates: user.profile.operatingStates ?? [],
+        operatingLgas: user.profile.operatingLgas ?? [],
+        operatingCities: user.profile.operatingCities ?? [],
       })
     }
   }, [user])
@@ -112,6 +134,136 @@ export default function ProfilePage() {
             </div>
           </CardContent>
         </Card>
+
+        {user?.role === RolesEnum.AGENT && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Operational Locations</CardTitle>
+              <CardDescription>States, LGAs, and cities you operate in</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* States */}
+              <div className="space-y-2">
+                <Label>States</Label>
+                <div className="flex gap-2">
+                  <Select value={selectedState} onValueChange={(val) => val && setSelectedState(val)}>
+                    <SelectTrigger className="w-full"><SelectValue placeholder="Select state" /></SelectTrigger>
+                    <SelectContent>
+                      {states.map((s) => (
+                        <SelectItem key={s.state} value={s.state}>{s.state}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button type="button" variant="outline" onClick={() => {
+                    if (selectedState && !form.operatingStates?.includes(selectedState)) {
+                      setForm({ ...form, operatingStates: [...(form.operatingStates ?? []), selectedState] })
+                    }
+                  }}>Add</Button>
+                </div>
+                {form.operatingStates && form.operatingStates.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {form.operatingStates.map((state) => (
+                      <Badge key={state} variant="secondary" className="gap-1">
+                        {state}
+                        <button type="button" onClick={() => setForm({ ...form, operatingStates: form.operatingStates?.filter((s) => s !== state) ?? [] })} className="text-muted-foreground hover:text-foreground">
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* LGAs */}
+              <div className="space-y-2">
+                <Label>LGAs</Label>
+                <div className="flex gap-2">
+                  <Select value={selectedState} onValueChange={(val) => val && setSelectedState(val)}>
+                    <SelectTrigger className="w-full"><SelectValue placeholder="Select state" /></SelectTrigger>
+                    <SelectContent>
+                      {states.map((s) => (
+                        <SelectItem key={s.state} value={s.state}>{s.state}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select disabled={!selectedState} value={selectedLga} onValueChange={(val) => val && setSelectedLga(val)}>
+                    <SelectTrigger className="w-full"><SelectValue placeholder="Select LGA" /></SelectTrigger>
+                    <SelectContent>
+                      {lgas.map((l) => (
+                        <SelectItem key={l.name} value={l.name}>{l.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button type="button" variant="outline" onClick={() => {
+                    if (selectedLga && !form.operatingLgas?.includes(selectedLga)) {
+                      setForm({ ...form, operatingLgas: [...(form.operatingLgas ?? []), selectedLga] })
+                    }
+                  }}>Add</Button>
+                </div>
+                {form.operatingLgas && form.operatingLgas.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {form.operatingLgas.map((lga) => (
+                      <Badge key={lga} variant="secondary" className="gap-1">
+                        {lga}
+                        <button type="button" onClick={() => setForm({ ...form, operatingLgas: form.operatingLgas?.filter((l) => l !== lga) ?? [] })} className="text-muted-foreground hover:text-foreground">
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Cities */}
+              <div className="space-y-2">
+                <Label>Cities</Label>
+                <div className="flex gap-2">
+                  <Select value={selectedState} onValueChange={(val) => val && setSelectedState(val)}>
+                    <SelectTrigger className="w-full"><SelectValue placeholder="Select state" /></SelectTrigger>
+                    <SelectContent>
+                      {states.map((s) => (
+                        <SelectItem key={s.state} value={s.state}>{s.state}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select disabled={!selectedState} value={selectedLga} onValueChange={(val) => val && setSelectedLga(val)}>
+                    <SelectTrigger className="w-full"><SelectValue placeholder="Select LGA" /></SelectTrigger>
+                    <SelectContent>
+                      {lgas.map((l) => (
+                        <SelectItem key={l.name} value={l.name}>{l.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select disabled={!selectedState || !selectedLga} value={selectedCity} onValueChange={(val) => val && setSelectedCity(val)}>
+                    <SelectTrigger className="w-full"><SelectValue placeholder="Select city" /></SelectTrigger>
+                    <SelectContent>
+                      {cities.map((c) => (
+                        <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button type="button" variant="outline" onClick={() => {
+                    if (selectedCity && !form.operatingCities?.includes(selectedCity)) {
+                      setForm({ ...form, operatingCities: [...(form.operatingCities ?? []), selectedCity] })
+                    }
+                  }}>Add</Button>
+                </div>
+                {form.operatingCities && form.operatingCities.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {form.operatingCities.map((city) => (
+                      <Badge key={city} variant="secondary" className="gap-1">
+                        {city}
+                        <button type="button" onClick={() => setForm({ ...form, operatingCities: form.operatingCities?.filter((c) => c !== city) ?? [] })} className="text-muted-foreground hover:text-foreground">
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <Button type="submit" disabled={updateProfile.isPending}>
           {updateProfile.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

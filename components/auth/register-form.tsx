@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
+import { Eye, EyeOff, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import type { ApiError } from "@/types/api"
 
@@ -20,6 +20,8 @@ export function RegisterForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword2, setShowPassword2] = useState(false)
   const searchParams = useSearchParams(); 
   const prevPath = searchParams.get('path') || ''
 
@@ -52,7 +54,7 @@ export function RegisterForm() {
         <CardDescription>Get started with CytyFlix today</CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 mb-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -66,28 +68,56 @@ export function RegisterForm() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Create a password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={8}
-            />
+            <div className="relative w-full">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Create a password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={8}
+              />
+              {
+                showPassword ?
+                  <Eye 
+                    className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground cursor-pointer" 
+                    onClick={() => setShowPassword(!showPassword)}
+                  />
+                  :
+                  <EyeOff 
+                    className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground cursor-pointer" 
+                    onClick={() => setShowPassword(!showPassword)}
+                  />
+              }
+            </div>
             <p className="text-xs text-muted-foreground">Must be at least 8 characters</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              placeholder="Confirm your password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              minLength={8}
-            />
+            <div className="relative w-full">
+              <Input
+                id="confirmPassword"
+                type={showPassword2 ? "text" : "password"}
+                placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                minLength={8}
+              />
+              {
+                showPassword2 ?
+                  <Eye 
+                    className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground cursor-pointer" 
+                    onClick={() => setShowPassword2(!showPassword2)}
+                  />
+                  :
+                  <EyeOff 
+                    className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground cursor-pointer" 
+                    onClick={() => setShowPassword2(!showPassword2)}
+                  />
+              }
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-4">

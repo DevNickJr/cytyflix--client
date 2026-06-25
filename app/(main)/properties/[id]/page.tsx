@@ -30,6 +30,9 @@ import { toast } from "sonner"
 import type { ApiError } from "@/types/api"
 import { ReviewSection } from "@/components/reviews/review-section"
 import { ReportDialog } from "@/components/reviews/report-dialog"
+import { ShareButtons } from "@/components/shared/share-buttons"
+import { useTrackPageView } from "@/hooks/use-analytics"
+import { EventType } from "@/types/analytics"
 
 export default function PropertyDetailPage({
   params,
@@ -48,7 +51,9 @@ export default function PropertyDetailPage({
   const [reportOpen, setReportOpen] = useState(false)
   const isSaved = saveData?.data?.isSaved ?? false
   const property = data?.data
-  
+
+  useTrackPageView(EventType.PROPERTY_VIEW, id)
+
   if (isLoading) return <PageLoader />
   if (!property) {
     return (
@@ -281,6 +286,19 @@ export default function PropertyDetailPage({
             open={reportOpen}
             onOpenChange={setReportOpen}
           />
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Share Property</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ShareButtons
+                url={typeof window !== "undefined" ? window.location.href : ""}
+                title={property.title}
+                description={property.description}
+              />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
