@@ -40,3 +40,15 @@ export function getInitials(firstName?: string, lastName?: string) {
   const last = lastName?.charAt(0)?.toUpperCase() ?? ""
   return first + last || "U"
 }
+
+export const getRootUrl = (path: string) => {
+  const baseDomain = process.env.NEXT_PUBLIC_DOMAIN_NAME || 'cytyflix.com'; 
+  
+  // In local development
+  if (typeof window !== 'undefined' && window.location.hostname.includes('localhost')) {
+    return `http://localhost:3000${path}`;
+  }
+  
+  // In production
+  return `https://${baseDomain}${path}`;
+};

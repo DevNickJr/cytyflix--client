@@ -17,7 +17,7 @@ export function middleware(req) {
   // 2. Safely parse out the subdomain depending on the environment
   let subdomain = '';
 
-  console.log('Hostname:', hostname, 'Pathname:', url.pathname);
+  // console.log('Hostname:', hostname, 'Pathname:', url.pathname);
   
   // if (hostname.includes('localhost')) {
   //   // Local development (e.g., duadei-nicholas.localhost:3000)
@@ -49,7 +49,7 @@ export function middleware(req) {
   
   if (subdomain) {
     // 3. Perform the internal rewrite if a valid subdomain is found
-    console.log(`Rewriting subdomain "${subdomain}" to /agents/${subdomain}`);
+    // console.log(`Rewriting subdomain "${subdomain}" to /agents/${subdomain}`);
   
     // This retains the trailing URL path (e.g. ://subdomain.com -> /agents/subdomain/settings)
     return NextResponse.rewrite(new URL(`/agents/${subdomain}`, req.url));

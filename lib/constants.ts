@@ -20,6 +20,7 @@ export const ROUTES = {
   DASHBOARD_BECOME_AGENT: "/dashboard/become-agent",
   DASHBOARD_BOOKINGS: "/dashboard/bookings",
   DASHBOARD_BOOKING_DETAIL: (id: string) => `/dashboard/bookings/${id}`,
+  DASHBOARD_WALLET: "/dashboard/wallet",
   DASHBOARD_ADMIN_VERIFICATIONS: "/dashboard/admin/verifications",
   DASHBOARD_ADMIN_REPORTS: "/dashboard/admin/reports",
   AGENTS: "/agents",
@@ -107,6 +108,17 @@ export enum BookingStatus {
 export enum PaymentStatus {
   PENDING = "pending",
   PAID = "paid",
+  FAILED = "failed",
+}
+
+export enum TransactionType {
+  CREDIT = "credit",
+  DEBIT = "debit",
+}
+
+export enum TransactionStatus {
+  PENDING = "pending",
+  COMPLETED = "completed",
   FAILED = "failed",
 }
 

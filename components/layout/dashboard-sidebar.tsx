@@ -18,6 +18,7 @@ import {
   ShieldAlert,
   Flag,
   ExternalLink,
+  Wallet,
 } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
 
@@ -37,6 +38,12 @@ const SIDEBAR_LINKS: SidebarLink[] = [
   { href: ROUTES.DASHBOARD_SAVED, label: "Saved Listings", icon: Heart },
   { href: ROUTES.DASHBOARD_INQUIRIES, label: "Inquiries", icon: MessageSquare },
   { href: ROUTES.DASHBOARD_BOOKINGS, label: "Bookings", icon: CalendarCheck },
+  {
+    href: ROUTES.DASHBOARD_WALLET,
+    label: "Wallet",
+    icon: Wallet,
+    showFor: (role) => role === RolesEnum.AGENT,
+  },
   { href: ROUTES.DASHBOARD_NOTIFICATIONS, label: "Notifications", icon: Bell },
   {
     href: ROUTES.DASHBOARD_BECOME_AGENT,
