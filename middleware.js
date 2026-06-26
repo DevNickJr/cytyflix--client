@@ -10,37 +10,56 @@ export function middleware(req) {
   // const parsedHost = hostname.split('.');
   // console.log('Parsed host:', {parsedHost});
 
-  if (url.pathname.startsWith('/agents')) {
-    return NextResponse.next();
-  }
+  // if (url.pathname.startsWith('/agents')) {
+  //   return NextResponse.next();
+  // }
   
   // 2. Safely parse out the subdomain depending on the environment
   let subdomain = '';
+
+  console.log('Hostname:', hostname, 'Pathname:', url.pathname);
   
-  if (hostname.includes('localhost')) {
-    // Local development (e.g., duadei-nicholas.localhost:3000)
-    const pieces = hostname.split('.');
-    if (pieces.length > 1) subdomain = pieces[0];
-  } else {
+  // if (hostname.includes('localhost')) {
+  //   // Local development (e.g., duadei-nicholas.localhost:3000)
+  //   const pieces = hostname.split('.');
+  //   if (pieces.length > 1) subdomain = pieces[0];
+  // } else {
     // Production (e.g., duadei-nicholas.cytyflix.vercel.app or duadei-nicholas.cytyflix.app)
     // Replace root production domains to leave only the subdomain behind
+    const actualProfile = url.pathname === '/' || url.pathname === '/agents' 
     const rootDomain = hostname
-      .replace('.cytyflix.vercel.app', '')
-      .replace('.cytyflix.com', '')
-      .replace('.cytyflix.app', '')
-      .replace('www.', ''); // Remove www prefix if present
+      ?.replace('.cytyflix.vercel.app', '')
+      ?.replace('.cytyflix.com', '')
+      ?.replace('.cytyflix.app', '')
+      ?.replace('.localhost:3000', '')
+      ?.replace('www.', ''); // Remove www prefix if present
+
 
     if (rootDomain !== hostname && rootDomain !== 'cytyflix' && rootDomain !== 'www' && rootDomain.split('.').length === 1) {
       subdomain = rootDomain;
     }
+
+      console.log({
+        actualProfile,
+        rootDomain,
+        hostname,
+        pathname: url.pathname,
+        urls: url.toString(),
+        subdomain,
+      })
+  // }
+
+  if (url?.pathname && url.pathname !== '/') {
+    console.log(`Rewriting to pathname - "${url.pathname}"`);
+    return NextResponse.rewrite(new URL(`${url.pathname}`, req.url));
   }
 
   // 3. Perform the internal rewrite if a valid subdomain is found
   if (subdomain) {
-    console.log(`Rewriting subdomain "${subdomain}" to /agents/${subdomain}${url.pathname}`);
+    console.log(`Rewriting subdomain "${subdomain}" to /agents/${subdomain}`);
     
     // This retains the trailing URL path (e.g. ://subdomain.com -> /agents/subdomain/settings)
-    return NextResponse.rewrite(new URL(`/agents/${subdomain}${url.pathname}`, req.url));
+    return NextResponse.rewrite(new URL(`/agents/${subdomain}`, req.url));
   }
 
   return NextResponse.next();
