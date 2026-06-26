@@ -43,6 +43,7 @@ const NAV_LINKS = [
   { href: ROUTES.FAQ, label: "FAQ", icon: HelpCircle },
 ]
 
+
 export function Navbar() {
   const pathname = usePathname()
   const router = useRouter()
