@@ -26,6 +26,13 @@ export function middleware(req) {
   // } else {
     // Production (e.g., duadei-nicholas.cytyflix.vercel.app or duadei-nicholas.cytyflix.app)
     // Replace root production domains to leave only the subdomain behind
+
+    if (url?.pathname && url.pathname !== '/') {
+      return NextResponse.next();
+      // console.log(`Rewriting to pathname - "${url.pathname}"`);
+      // return NextResponse.rewrite(new URL(`${url.pathname}`, req.url));
+    }
+    
     const rootDomain = hostname
       ?.replace('.cytyflix.vercel.app', '')
       ?.replace('.cytyflix.com', '')
@@ -41,10 +48,6 @@ export function middleware(req) {
 
   
   if (subdomain) {
-    if (url?.pathname && url.pathname !== '/') {
-      console.log(`Rewriting to pathname - "${url.pathname}"`);
-      return NextResponse.rewrite(new URL(`${url.pathname}`, req.url));
-    }
     // 3. Perform the internal rewrite if a valid subdomain is found
     console.log(`Rewriting subdomain "${subdomain}" to /agents/${subdomain}`);
   

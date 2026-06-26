@@ -22,13 +22,13 @@ const PropertyMobileFilter = ({ filters, onFilterChange, onReset }: PropertyFilt
 
   return (
     <>
-      <nav className='fixed bottom-4 right-4 z-30 md:hidden h-16'>
+      <nav draggable className='fixed bottom-4 right-4 z-30 md:hidden h-16'>
         <button
           onClick={() => setMoreOpen(true)}
-          className='flex flex-col items-center gap-1 px-3 py-2 text-xs text-muted-foreground transition-colors'
+          className='flex flex-col items-center gap-1 px-4 justify-center aspect-square bg-primary text-primary-foreground rounded-full text-xs shadow-md shadow-primary/50 hover:shadow-lg hover:shadow-primary/50 transition-shadow'
         >
           <SlidersHorizontal className='w-5 h-5' />
-          <span>Filter</span>
+          {/* <span>Filter</span> */}
         </button>
       </nav>
       <Sheet open={moreOpen} onOpenChange={setMoreOpen}>
