@@ -14,6 +14,10 @@ export const agentService = {
     return apiClient.get<ApiResponse<User>>(`/users/agents/${id}`)
   },
 
+  async getAgentBySlug(slug: string) {
+    return apiClient.get<ApiResponse<User>>(`/users/agents/by-slug/${slug}`)
+  },
+
   async getAgentProperties(id: string, page = 1, limit = 12) {
     return apiClient.get<PaginatedResponse<Property>>(`/users/agents/${id}/properties`, { page, limit })
   },

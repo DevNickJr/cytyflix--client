@@ -29,6 +29,7 @@ import {
   HelpCircle,
   Info,
   Phone,
+  Users,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
@@ -36,6 +37,7 @@ import Image from "next/image"
 const NAV_LINKS = [
   { href: ROUTES.HOME, label: "Home", icon: Home },
   { href: ROUTES.PROPERTIES, label: "Properties", icon: Search },
+  { href: ROUTES.AGENTS, label: "Agents", icon: Users },
   { href: ROUTES.ABOUT, label: "About", icon: Info },
   { href: ROUTES.CONTACT, label: "Contact", icon: Phone },
   { href: ROUTES.FAQ, label: "FAQ", icon: HelpCircle },

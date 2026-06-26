@@ -17,6 +17,7 @@ import {
   CalendarCheck,
   ShieldAlert,
   Flag,
+  ExternalLink,
 } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
 
@@ -99,14 +100,26 @@ export function DashboardSidebar() {
           })}
         </div>
 
-        {isOwner && (
-          <div className="mt-auto pt-4 border-t">
+        <div className="mt-auto pt-4 border-t space-y-2">
+          {user?.role === RolesEnum.AGENT && (
+            <Link
+              href={ROUTES.AGENT_DETAIL(user.profile?.slug || user.id)}
+              target="_blank"
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors text-muted-foreground hover:bg-accent hover:text-foreground"
+              )}
+            >
+              <ExternalLink className="h-4 w-4" />
+              My Agent Page
+            </Link>
+          )}
+          {isOwner && (
             <Link href={ROUTES.DASHBOARD_NEW_PROPERTY} className={cn(buttonVariants(), "w-full")}>
               <Plus className="h-4 w-4 mr-2" />
               List Property
             </Link>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </aside>
   )
@@ -148,6 +161,16 @@ export function DashboardMobileNav() {
             </Link>
           )
         })}
+        {user?.role === RolesEnum.AGENT && (
+          <Link
+            href={ROUTES.AGENT_DETAIL(user.profile?.slug || user.id)}
+            target="_blank"
+            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm whitespace-nowrap transition-colors text-muted-foreground hover:bg-accent"
+          >
+            <ExternalLink className="h-4 w-4" />
+            My Agent Page
+          </Link>
+        )}
       </div>
     </nav>
   )

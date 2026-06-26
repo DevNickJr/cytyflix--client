@@ -1,13 +1,12 @@
 "use client"
 
-import { use, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useAgent, useAgentProperties, useAgentStats } from "@/hooks/use-agents"
+import { useAgentProperties, useAgentStats } from "@/hooks/use-agents"
 import { useAuth } from "@/hooks/use-auth"
 import { useTrackPageView } from "@/hooks/use-analytics"
 import { EventType } from "@/types/analytics"
 import { ROUTES } from "@/lib/constants"
-import { PageLoader } from "@/components/shared/loading-spinner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -31,35 +30,21 @@ import { Pagination } from "@/components/shared/pagination"
 import { EmptyState } from "@/components/shared/empty-state"
 import { ShareButtons } from "@/components/shared/share-buttons"
 import { toast } from "sonner"
+import type { User } from "@/types/user"
 
-export default function AgentDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { id } = use(params)
+interface AgentDetailClientProps {
+  agent: User
+}
+
+export default function AgentDetailClient({ agent }: AgentDetailClientProps) {
   const router = useRouter()
   const { isAuthenticated } = useAuth()
-  const { data, isLoading } = useAgent(id)
-  const { data: statsData } = useAgentStats(id)
+  const { data: statsData } = useAgentStats(agent.id)
   const [bookDialogOpen, setBookDialogOpen] = useState(false)
   const [page, setPage] = useState(1)
-  const { data: propertiesData } = useAgentProperties(id, page, 12)
+  const { data: propertiesData } = useAgentProperties(agent.id, page, 12)
 
-  useTrackPageView(EventType.AGENT_PROFILE_VIEW, id)
-
-  if (isLoading) return <PageLoader />
-
-  const agent = data?.data
-  if (!agent) {
-    return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold mb-2">Agent Not Found</h1>
-        <p className="text-muted-foreground mb-4">This agent profile does not exist.</p>
-        <Button onClick={() => router.push(ROUTES.AGENTS)}>Browse Agents</Button>
-      </div>
-    )
-  }
+  useTrackPageView(EventType.AGENT_PROFILE_VIEW, agent.id)
 
   const fullName = agent.profile?.firstName && agent.profile?.lastName
     ? `${agent.profile.firstName} ${agent.profile.lastName}`
@@ -181,6 +166,7 @@ export default function AgentDetailPage({
           url={typeof window !== "undefined" ? window.location.href : ""}
           title={`${fullName} — Agent on CytyFlix`}
           description={agent.profile?.bio}
+          slug={agent.profile?.slug}
         />
       </div>
            <div className="grid md:grid-cols-3 gap-6 mt-6">
@@ -237,7 +223,7 @@ export default function AgentDetailPage({
       {/* Properties Section */}
       <div>
         {
-          properties.length > 0 && ( 
+          properties.length > 0 && (
             <h2 className="text-xl font-semibold mb-6">Properties by {fullName}</h2>
           )
         }
@@ -268,7 +254,7 @@ export default function AgentDetailPage({
       </div>
 
       <BookAgentDialog
-        agentId={id}
+        agentId={agent.id}
         open={bookDialogOpen}
         onOpenChange={setBookDialogOpen}
         properties={properties}

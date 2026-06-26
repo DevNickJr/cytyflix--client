@@ -132,7 +132,7 @@ export default function AgentsPage() {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {agents.map((agent) => (
-              <Link key={agent.id} href={ROUTES.AGENT_DETAIL(agent.id)}>
+              <Link key={agent.id} href={ROUTES.AGENT_DETAIL(agent.profile?.slug || agent.id)}>
                 <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
                   <CardContent className="p-6 text-center">
                     <Avatar className="h-16 w-16 mx-auto mb-3">

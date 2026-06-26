@@ -14,6 +14,7 @@ export interface UserProfile {
   operatingStates?: string[]
   operatingLgas?: string[]
   operatingCities?: string[]
+  slug?: string
 }
 
 export interface User {
@@ -38,4 +39,5 @@ export interface UpdateProfileRequest {
   operatingStates?: string[]
   operatingLgas?: string[]
   operatingCities?: string[]
+  slug?: string
 }

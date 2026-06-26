@@ -1,12 +1,20 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import { useFetch } from "./use-fetch"
 import { useMutationAction } from "./use-mutation"
 import { propertyService } from "@/services/property.service"
 import type { PropertyFilters, CreatePropertyRequest, UpdatePropertyRequest } from "@/types/property"
 
 export function useProperties(initialFilters?: PropertyFilters) {
+  const [apiFilters, setAPIFilters] = useState<PropertyFilters>({
+    page: 1,
+    limit: 12,
+    sortBy: "createdAt",
+    sortOrder: "DESC",
+    ...initialFilters,
+  })
+
   const [filters, setFilters] = useState<PropertyFilters>({
     page: 1,
     limit: 12,
@@ -15,9 +23,18 @@ export function useProperties(initialFilters?: PropertyFilters) {
     ...initialFilters,
   })
 
+  let timer = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (timer.current) clearTimeout(timer.current)
+    timer.current = setTimeout(() => {
+      setAPIFilters((prev) => ({ ...prev, ...filters, page: filters.page ?? 1, limit: filters.limit ?? 12, sortBy: filters.sortBy ?? "createdAt", sortOrder: filters.sortOrder ?? "DESC"  }))
+    }, 600) // 600ms debounce
+  }, [filters])
+
   const query = useFetch({
-    queryKey: ["properties", filters],
-    queryFn: () => propertyService.getProperties(filters)
+    queryKey: ["properties", apiFilters],
+    queryFn: () => propertyService.getProperties(apiFilters),
   })
 
   const updateFilters = useCallback((newFilters: Partial<PropertyFilters>) => {
@@ -30,6 +47,7 @@ export function useProperties(initialFilters?: PropertyFilters) {
 
   return { ...query, filters, updateFilters, resetFilters }
 }
+
 
 export function useProperty(id: string) {
   return useFetch({

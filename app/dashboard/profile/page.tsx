@@ -1,11 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 import { useMutationAction } from "@/hooks/use-mutation"
 import { usePlaces } from "@/hooks/usePlaces"
 import { userService } from "@/services/user.service"
-import { RolesEnum } from "@/lib/constants"
+import { ROUTES, RolesEnum } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Loader2, X } from "lucide-react"
+import { Loader2, X, ExternalLink } from "lucide-react"
 import type { UpdateProfileRequest } from "@/types/user"
 
 export default function ProfilePage() {
@@ -32,6 +33,7 @@ export default function ProfilePage() {
     operatingCities: [],
   })
 
+  const [slugInput, setSlugInput] = useState("")
   const [selectedState, setSelectedState] = useState("")
   const [selectedLga, setSelectedLga] = useState("")
   const [selectedCity, setSelectedCity] = useState("")
@@ -59,6 +61,7 @@ export default function ProfilePage() {
         operatingLgas: user.profile.operatingLgas ?? [],
         operatingCities: user.profile.operatingCities ?? [],
       })
+      setSlugInput(user.profile.slug ?? "")
     }
   }, [user])
 
@@ -66,6 +69,14 @@ export default function ProfilePage() {
     (data: UpdateProfileRequest) => userService.updateProfile(data),
     {
       successMessage: "Profile updated successfully",
+      onSuccess: () => refreshUser(),
+    }
+  )
+
+  const updateSlug = useMutationAction(
+    (slug: string) => userService.updateSlug(slug),
+    {
+      successMessage: "Slug updated successfully",
       onSuccess: () => refreshUser(),
     }
   )
@@ -136,6 +147,48 @@ export default function ProfilePage() {
         </Card>
 
         {user?.role === RolesEnum.AGENT && (
+          <>
+          <Card>
+            <CardHeader>
+              <CardTitle>Agent Profile URL</CardTitle>
+              <CardDescription>Customize your public profile slug and view your agent page</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="slug">Profile Slug</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="slug"
+                    value={slugInput}
+                    onChange={(e) => setSlugInput(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))}
+                    placeholder="john-doe"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={updateSlug.isPending || !slugInput || slugInput === user?.profile?.slug}
+                    onClick={() => updateSlug.mutate(slugInput)}
+                  >
+                    {updateSlug.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Update"}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Your public profile will be available at <code>/agents/{slugInput || user?.profile?.slug || "your-slug"}</code>
+                </p>
+              </div>
+              {(user?.profile?.slug || user?.id) && (
+                <Link
+                  href={ROUTES.AGENT_DETAIL(user.profile?.slug || user.id)}
+                  target="_blank"
+                  className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  View My Agent Page
+                </Link>
+              )}
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle>Operational Locations</CardTitle>
@@ -263,6 +316,7 @@ export default function ProfilePage() {
               </div>
             </CardContent>
           </Card>
+          </>
         )}
 
         <Button type="submit" disabled={updateProfile.isPending}>

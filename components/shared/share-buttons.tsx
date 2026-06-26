@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
@@ -11,11 +11,19 @@ interface ShareButtonsProps {
   title: string
   description?: string
   className?: string
+  slug?: string // Optional slug prop
 }
 
-export function ShareButtons({ url, title, description, className }: ShareButtonsProps) {
+export function ShareButtons({ url, title, description, className, slug }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false)
+  const [isShareSupported, setIsShareSupported] = useState(false) // 2. Handle state safely
 
+  // 3. Detect support safely after component mounts on client side
+  useEffect(() => {
+    if (typeof navigator !== "undefined" && "share" in navigator) {
+      setIsShareSupported(true)
+    }
+  }, [])
   const encodedUrl = encodeURIComponent(url)
   const encodedTitle = encodeURIComponent(title)
 
@@ -51,7 +59,10 @@ export function ShareButtons({ url, title, description, className }: ShareButton
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(url)
+      // Construct the domain dynamically using the env variable fallback
+      const domain = process.env.NEXT_PUBLIC_DOMAIN_NAME || "cytyflix.com";
+      const fullUrl =  slug ? `https://${slug}.${domain}` : url;
+      await navigator.clipboard.writeText(fullUrl);
       setCopied(true)
       toast.success("Link copied to clipboard")
       setTimeout(() => setCopied(false), 2000)
@@ -88,7 +99,7 @@ export function ShareButtons({ url, title, description, className }: ShareButton
         {copied ? "Copied" : "Copy Link"}
       </Button>
 
-      {typeof navigator !== "undefined" && "share" in navigator && (
+      {isShareSupported && (
         <Button variant="outline" size="sm" className="gap-2 sm:hidden" onClick={handleNativeShare}>
           <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current">
             <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" />

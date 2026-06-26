@@ -38,6 +38,14 @@ export function useAgent(id: string) {
   })
 }
 
+export function useAgentBySlug(slug: string) {
+  return useFetch({
+    queryKey: ["agent-by-slug", slug],
+    queryFn: () => agentService.getAgentBySlug(slug),
+    options: { enabled: !!slug },
+  })
+}
+
 export function useAgentProperties(id: string, page = 1, limit = 12) {
   return useFetch({
     queryKey: ["agent-properties", id, page, limit],

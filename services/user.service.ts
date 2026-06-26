@@ -11,6 +11,10 @@ export const userService = {
     return apiClient.put<ApiResponse<User>>("/users/me", data)
   },
 
+  async updateSlug(slug: string) {
+    return apiClient.patch<ApiResponse<User>>("/users/me/slug", { slug })
+  },
+
   async getUserById(id: string) {
     return apiClient.get<ApiResponse<User>>(`/users/${id}`)
   },
