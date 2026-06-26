@@ -23,12 +23,14 @@ export function middleware(req) {
     if (pieces.length > 1) subdomain = pieces[0];
   } else {
     // Production (e.g., duadei-nicholas.cytyflix.vercel.app or duadei-nicholas.cytyflix.app)
-    // Replace your root production domains to leave only the subdomain behind
+    // Replace root production domains to leave only the subdomain behind
     const rootDomain = hostname
       .replace('.cytyflix.vercel.app', '')
-      .replace('.cytyflix.app', ''); // Add your custom apex domain here if you buy one later
+      .replace('.cytyflix.com', '')
+      .replace('.cytyflix.app', '')
+      .replace('www.', ''); // Remove www prefix if present
 
-    if (rootDomain !== hostname && !rootDomain.startsWith('www')) {
+    if (rootDomain !== hostname && rootDomain !== 'cytyflix' && rootDomain !== 'www' && rootDomain.split('.').length === 1) {
       subdomain = rootDomain;
     }
   }
