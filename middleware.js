@@ -26,7 +26,6 @@ export function middleware(req) {
   // } else {
     // Production (e.g., duadei-nicholas.cytyflix.vercel.app or duadei-nicholas.cytyflix.app)
     // Replace root production domains to leave only the subdomain behind
-    const actualProfile = url.pathname === '/' || url.pathname === '/agents' 
     const rootDomain = hostname
       ?.replace('.cytyflix.vercel.app', '')
       ?.replace('.cytyflix.com', '')
@@ -35,29 +34,20 @@ export function middleware(req) {
       ?.replace('www.', ''); // Remove www prefix if present
 
 
-    if (rootDomain !== hostname && rootDomain !== 'cytyflix' && rootDomain !== 'www' && rootDomain.split('.').length === 1) {
-      subdomain = rootDomain;
-    }
-
-      console.log({
-        actualProfile,
-        rootDomain,
-        hostname,
-        pathname: url.pathname,
-        urls: url.toString(),
-        subdomain,
-      })
-  // }
-
-  if (url?.pathname && url.pathname !== '/') {
-    console.log(`Rewriting to pathname - "${url.pathname}"`);
-    return NextResponse.rewrite(new URL(`${url.pathname}`, req.url));
+  if (rootDomain !== hostname && rootDomain !== 'cytyflix' && rootDomain !== 'www' && rootDomain.split('.').length === 1) {
+    subdomain = rootDomain;
   }
 
-  // 3. Perform the internal rewrite if a valid subdomain is found
+
+  
   if (subdomain) {
+    if (url?.pathname && url.pathname !== '/') {
+      console.log(`Rewriting to pathname - "${url.pathname}"`);
+      return NextResponse.rewrite(new URL(`${url.pathname}`, req.url));
+    }
+    // 3. Perform the internal rewrite if a valid subdomain is found
     console.log(`Rewriting subdomain "${subdomain}" to /agents/${subdomain}`);
-    
+  
     // This retains the trailing URL path (e.g. ://subdomain.com -> /agents/subdomain/settings)
     return NextResponse.rewrite(new URL(`/agents/${subdomain}`, req.url));
   }
