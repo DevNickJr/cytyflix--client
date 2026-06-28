@@ -14,7 +14,6 @@ interface PropertyFiltersProps {
   filters: PropertyFiltersType
   onFilterChange: (filters: Partial<PropertyFiltersType>) => void
   onReset: () => void
-  forMobile?: boolean
 }
 
 const PropertyMobileFilter = ({ filters, onFilterChange, onReset }: PropertyFiltersProps) => {

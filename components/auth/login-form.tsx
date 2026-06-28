@@ -13,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import type { ApiError } from "@/types/api"
+import { sendGTMEvent } from "@next/third-parties/google"
 
 export function LoginForm() {
   const router = useRouter()
@@ -38,6 +39,7 @@ export function LoginForm() {
       toast.error(apiError.message || "Invalid credentials")
     } finally {
       setIsLoading(false)
+      sendGTMEvent({ event: 'button_clicked', value: 'login' })
     }
   }
 

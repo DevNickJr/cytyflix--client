@@ -7,9 +7,15 @@ import { Pagination } from "@/components/shared/pagination"
 import { PageLoader } from "@/components/shared/loading-spinner"
 import { Search } from "lucide-react"
 import PropertyMobileFilter from "@/components/properties/property-mobile-filter"
+import { useEffect } from "react"
+import { sendGTMEvent } from "@next/third-parties/google"
 
 export default function PropertiesPage() {
   const { data, isLoading, filters, updateFilters, resetFilters } = useProperties()
+
+  useEffect(() => {
+    sendGTMEvent({ event: 'view', value: 'view_home_page' })
+  }, [])
 
   return (
     <div className="container mx-auto px-4 py-8">

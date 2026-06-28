@@ -1,6 +1,6 @@
 "use client"
 
-import { use, useState } from "react"
+import { use, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useProperty } from "@/hooks/use-properties"
 import { useAuth } from "@/hooks/use-auth"
@@ -33,6 +33,7 @@ import { ReportDialog } from "@/components/reviews/report-dialog"
 import { ShareButtons } from "@/components/shared/share-buttons"
 import { useTrackPageView } from "@/hooks/use-analytics"
 import { EventType } from "@/types/analytics"
+import { sendGTMEvent } from "@next/third-parties/google"
 
 export default function PropertyDetailPage({
   params,
@@ -53,6 +54,10 @@ export default function PropertyDetailPage({
   const property = data?.data
 
   useTrackPageView(EventType.PROPERTY_VIEW, id)
+
+  useEffect(() => {
+    sendGTMEvent({ event: 'view', value: 'view_property_page', pId: id })
+  }, [])
 
   if (isLoading) return <PageLoader />
   if (!property) {

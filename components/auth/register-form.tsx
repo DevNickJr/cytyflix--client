@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Eye, EyeOff, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import type { ApiError } from "@/types/api"
+import { sendGTMEvent } from "@next/third-parties/google"
 
 export function RegisterForm() {
   const router = useRouter()
@@ -44,6 +45,7 @@ export function RegisterForm() {
       toast.error(apiError.message || "Registration failed")
     } finally {
       setIsLoading(false)
+      sendGTMEvent({ event: 'button_clicked', value: 'register' })
     }
   }
 
