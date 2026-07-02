@@ -24,7 +24,20 @@ export function ShareButtons({ url, title, description, className, slug }: Share
       setIsShareSupported(true)
     }
   }, [])
-  const encodedUrl = encodeURIComponent(url)
+
+  const generateLink = () => {
+    try {
+        // Construct the domain dynamically using the env variable fallback
+        const domain = process.env.NEXT_PUBLIC_DOMAIN_NAME || "cytyflix.com";
+        const fullUrl =  slug ? `https://${slug}.${domain}` : url;
+
+        return fullUrl
+      } catch {
+        return `https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}`
+      }
+  }
+
+  const encodedUrl = encodeURIComponent(generateLink())
   const encodedTitle = encodeURIComponent(title)
 
   const shareLinks = [
@@ -57,12 +70,15 @@ export function ShareButtons({ url, title, description, className, slug }: Share
     },
   ]
 
+
+
   const handleCopy = async () => {
     try {
       // Construct the domain dynamically using the env variable fallback
       const domain = process.env.NEXT_PUBLIC_DOMAIN_NAME || "cytyflix.com";
       const fullUrl =  slug ? `https://${slug}.${domain}` : url;
       await navigator.clipboard.writeText(fullUrl);
+
       setCopied(true)
       toast.success("Link copied to clipboard")
       setTimeout(() => setCopied(false), 2000)

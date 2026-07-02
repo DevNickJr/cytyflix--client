@@ -24,6 +24,19 @@ export const metadata: Metadata = {
   },
   description:
     "Modern housing discovery platform connecting renters with property owners across Nigeria. Browse apartments, houses, studios, and more.",
+  openGraph: {
+      title: `CytyFlix - Find Your Perfect Home`,
+      description: "Modern housing discovery platform connecting renters with property owners across Nigeria. Browse apartments, houses, studios, and more.",
+      type: "website",
+      siteName: "CytyFlix",
+      images: [{ url: 'https://www.cytyflix.com/applogo.png', alt: 'CytyFlix' }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `CytyFlix - Find Your Perfect Home`,
+      description: "Modern housing discovery platform connecting renters with property owners across Nigeria. Browse apartments, houses, studios, and more.",
+      images: ['https://www.cytyflix.com/applogo.png'],
+    },
 }
 
 export default function RootLayout({

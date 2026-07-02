@@ -57,6 +57,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${fullName} - Verified Agent on CytyFlix`,
       description,
       type: "profile",
+      siteName: "CytyFlix",
       ...(agent.profile?.profileImage && {
         images: [{ url: agent.profile.profileImage, alt: fullName }],
       }),
