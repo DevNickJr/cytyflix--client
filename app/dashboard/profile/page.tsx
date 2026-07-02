@@ -16,9 +16,11 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Loader2, X, ExternalLink } from "lucide-react"
 import type { UpdateProfileRequest } from "@/types/user"
+import { ImageUpload } from "@/components/shared/image-upload"
 
 export default function ProfilePage() {
   const { user, refreshUser } = useAuth()
+  const [profileId, setProfileId] = useState<string[]>([])
   const [form, setForm] = useState<UpdateProfileRequest>({
     firstName: "",
     lastName: "",
@@ -83,7 +85,10 @@ export default function ProfilePage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    updateProfile.mutate(form)
+    updateProfile.mutate({
+      ...form,
+      profileImage: profileId[0],
+    })
   }
 
   return (
@@ -116,10 +121,21 @@ export default function ProfilePage() {
               <Label htmlFor="bio">Bio</Label>
               <Textarea id="bio" value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} rows={3} maxLength={500} placeholder="Tell us about yourself..." />
             </div>
-            <div className="space-y-2">
+            <Card>
+              <CardContent>
+                <ImageUpload
+                  value={profileId}
+                  onChange={setProfileId}
+                  maxFiles={1}
+                  label="Profile Image"
+                  pathPrefix="/profile"
+                />
+              </CardContent>
+            </Card>
+            {/* <div className="space-y-2">
               <Label htmlFor="profileImage">Profile Image URL</Label>
               <Input id="profileImage" value={form.profileImage} onChange={(e) => setForm({ ...form, profileImage: e.target.value })} placeholder="https://..." />
-            </div>
+            </div> */}
           </CardContent>
         </Card>
 
