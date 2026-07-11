@@ -30,11 +30,42 @@ export function useCreateBooking() {
   )
 }
 
-export function useConfirmBooking() {
+export function useAgentConfirmBooking() {
   return useMutationAction(
-    (id: string) => bookingService.confirmBooking(id),
+    (id: string) => bookingService.agentConfirmBooking(id),
     {
-      successMessage: "Meeting confirmed",
+      successMessage: "Booking confirmed",
+      invalidateKeys: [["bookings"], ["booking"]],
+    },
+  )
+}
+
+export function useClientReleaseBooking() {
+  return useMutationAction(
+    (id: string) => bookingService.clientReleaseBooking(id),
+    {
+      successMessage: "Payment released to agent",
+      invalidateKeys: [["bookings"], ["booking"]],
+    },
+  )
+}
+
+export function useUpdateBookingSchedule() {
+  return useMutationAction(
+    ({ id, data }: { id: string; data: { scheduledDate?: string; scheduledTime?: string } }) =>
+      bookingService.updateBookingSchedule(id, data),
+    {
+      successMessage: "Schedule updated",
+      invalidateKeys: [["bookings"], ["booking"]],
+    },
+  )
+}
+
+export function useRejectBooking() {
+  return useMutationAction(
+    (id: string) => bookingService.rejectBooking(id),
+    {
+      successMessage: "Booking disputed",
       invalidateKeys: [["bookings"], ["booking"]],
     },
   )

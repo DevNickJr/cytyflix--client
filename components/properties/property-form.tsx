@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ImageUpload } from "@/components/shared/image-upload"
+import { VideoUpload } from "@/components/shared/video-upload"
 import { Loader2 } from "lucide-react"
 import type { CreatePropertyRequest, Property } from "@/types/property"
 import { usePlaces } from "@/hooks/usePlaces"
@@ -42,6 +43,7 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
     interiorImages: initialData?.interiorImages ?? [],
     exteriorImages: initialData?.exteriorImages ?? [],
     streetImages: initialData?.streetImages ?? [],
+    walkthroughVideo: initialData?.walkthroughVideo ?? "",
   })
 
   const { cities, lgas, states } = usePlaces({
@@ -217,17 +219,9 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
         </CardHeader>
         <CardContent className="space-y-6">
           <ImageUpload
-            value={form.proofOfOwnership}
-            onChange={(urls) => updateField("proofOfOwnership", urls)}
-            maxFiles={5}
-            label="Proof of Ownership / Mandate Letter"
-            required
-            pathPrefix="properties/proof-of-ownership"
-          />
-          <ImageUpload
             value={form.interiorImages}
             onChange={(urls) => updateField("interiorImages", urls)}
-            maxFiles={10}
+            maxFiles={5}
             label="Interior Images"
             required
             pathPrefix="properties/interior"
@@ -235,7 +229,7 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
           <ImageUpload
             value={form.exteriorImages}
             onChange={(urls) => updateField("exteriorImages", urls)}
-            maxFiles={10}
+            maxFiles={5}
             label="Exterior Images"
             required
             pathPrefix="properties/exterior"
@@ -246,6 +240,30 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
             maxFiles={5}
             label="Street Sign / Nearby Landmarks"
             pathPrefix="properties/street"
+          />
+          <ImageUpload
+            value={form.proofOfOwnership}
+            onChange={(urls) => updateField("proofOfOwnership", urls)}
+            maxFiles={5}
+            label="Proof of Ownership / Mandate Letter (optional)"
+            pathPrefix="properties/proof-of-ownership"
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Walkthrough Video</CardTitle>
+          <CardDescription>
+            Upload a raw, unedited 20-60 second video walkthrough of the property. This is required to verify physical access.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <VideoUpload
+            value={form.walkthroughVideo}
+            onChange={(url) => updateField("walkthroughVideo", url)}
+            pathPrefix="properties/walkthrough-videos"
+            // required
           />
         </CardContent>
       </Card>

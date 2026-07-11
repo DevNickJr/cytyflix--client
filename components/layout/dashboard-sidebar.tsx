@@ -19,6 +19,8 @@ import {
   Flag,
   ExternalLink,
   Wallet,
+  Banknote,
+  FileText,
 } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
 
@@ -38,6 +40,8 @@ const SIDEBAR_LINKS: SidebarLink[] = [
   { href: ROUTES.DASHBOARD_SAVED, label: "Saved Listings", icon: Heart },
   { href: ROUTES.DASHBOARD_INQUIRIES, label: "Inquiries", icon: MessageSquare },
   { href: ROUTES.DASHBOARD_BOOKINGS, label: "Bookings", icon: CalendarCheck },
+  { href: ROUTES.DASHBOARD_RENT_PAYMENTS, label: "Rent Payments", icon: Banknote },
+  { href: ROUTES.DASHBOARD_TENANCY_AGREEMENTS, label: "Agreements", icon: FileText },
   {
     href: ROUTES.DASHBOARD_WALLET,
     label: "Wallet",

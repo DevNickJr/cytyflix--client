@@ -15,8 +15,20 @@ export const bookingService = {
     return apiClient.get<ApiResponse<Booking>>(`/bookings/${id}`)
   },
 
-  async confirmBooking(id: string) {
-    return apiClient.post<ApiResponse<Booking>>(`/bookings/${id}/confirm`)
+  async agentConfirmBooking(id: string) {
+    return apiClient.post<ApiResponse<Booking>>(`/bookings/${id}/agent-confirm`)
+  },
+
+  async clientReleaseBooking(id: string) {
+    return apiClient.post<ApiResponse<Booking>>(`/bookings/${id}/client-release`)
+  },
+
+  async updateBookingSchedule(id: string, data: { scheduledDate?: string; scheduledTime?: string }) {
+    return apiClient.patch<ApiResponse<Booking>>(`/bookings/${id}`, data)
+  },
+
+  async rejectBooking(id: string) {
+    return apiClient.post<ApiResponse<Booking>>(`/bookings/${id}/reject`)
   },
 
   async cancelBooking(id: string) {

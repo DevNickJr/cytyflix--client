@@ -14,10 +14,20 @@ interface BookingCardProps {
 
 const STATUS_BADGE: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
   [BookingStatus.PENDING]: "secondary",
+  [BookingStatus.AWAITING_AGENT_CONFIRMATION]: "outline",
   [BookingStatus.CONFIRMED]: "default",
   [BookingStatus.COMPLETED]: "default",
   [BookingStatus.DISPUTED]: "destructive",
   [BookingStatus.CANCELLED]: "destructive",
+}
+
+const STATUS_LABEL: Record<string, string> = {
+  [BookingStatus.PENDING]: "Pending",
+  [BookingStatus.AWAITING_AGENT_CONFIRMATION]: "Awaiting Agent",
+  [BookingStatus.CONFIRMED]: "Confirmed",
+  [BookingStatus.COMPLETED]: "Completed",
+  [BookingStatus.DISPUTED]: "Disputed",
+  [BookingStatus.CANCELLED]: "Cancelled",
 }
 
 const PAYMENT_BADGE: Record<string, "default" | "secondary" | "destructive"> = {
@@ -35,7 +45,7 @@ export function BookingCard({ booking }: BookingCardProps) {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <Badge variant={STATUS_BADGE[booking.bookingStatus]}>
-                  {booking.bookingStatus}
+                  {STATUS_LABEL[booking.bookingStatus] || booking.bookingStatus}
                 </Badge>
                 <Badge variant={PAYMENT_BADGE[booking.paymentStatus]}>
                   {booking.paymentStatus}

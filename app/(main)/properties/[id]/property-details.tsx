@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
 import { useSaveStatus, useToggleSave } from "@/hooks/use-saved-listings"
 import { useSendInquiry } from "@/hooks/use-inquiries"
-import { ROUTES, PROPERTY_TYPE_LABELS, LISTING_TYPE_LABELS } from "@/lib/constants"
+import { ROUTES, PROPERTY_TYPE_LABELS, LISTING_TYPE_LABELS, ListingType } from "@/lib/constants"
 import { formatPrice, formatDate } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -23,10 +23,12 @@ import {
   CheckCircle,
   Send,
   Flag,
+  AlertTriangle,
 } from "lucide-react"
 import { toast } from "sonner"
 import type { ApiError } from "@/types/api"
 import { ReviewSection } from "@/components/reviews/review-section"
+import { PayRentDialog } from "@/components/rent-payments/pay-rent-dialog"
 import { ReportDialog } from "@/components/reviews/report-dialog"
 import { ShareButtons } from "@/components/shared/share-buttons"
 import { useTrackPageView } from "@/hooks/use-analytics"
@@ -40,7 +42,7 @@ interface PropertyDetailClientProps {
 
 export default function PropertyDetailClient({ property }: PropertyDetailClientProps) {
   const router = useRouter()
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
 //   const { data, isLoading } = useProperty(property.id)
   const { data: saveData } = useSaveStatus(property.id)
   const toggleSave = useToggleSave()
@@ -71,7 +73,7 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
 
   const handleInquiry = async () => {
     if (!isAuthenticated) {
-      router.push(ROUTES.LOGIN)
+      router.push(`${ROUTES.LOGIN}path=/properties/${property?.id}`)
       return
     }
     if (message.length < 10) {
@@ -127,6 +129,32 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
               </div>
             )
           })()}
+
+          {/* Walkthrough Video */}
+          {property.walkthroughVideo && (
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Walkthrough Video</h3>
+              <video
+                src={property.walkthroughVideo}
+                controls
+                className="w-full rounded-lg aspect-video"
+                preload="metadata"
+              />
+            </div>
+          )}
+
+          {/* Frozen Banner */}
+          {property.isFrozen && (
+            <div className="flex items-start gap-3 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+              <AlertTriangle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium text-red-700 dark:text-red-400">This listing has been frozen</p>
+                <p className="text-sm text-red-600 dark:text-red-500">
+                  This listing has been flagged by multiple users and is currently under review.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Categorized Image Sections */}
           {property.exteriorImages.length > 0 && (
@@ -250,6 +278,16 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
               </Button>
               )}
 
+          {isAuthenticated && property.isAvailable && !property.isFrozen &&
+            property.listingType === ListingType.RENT &&
+            user?.id !== property.ownerId && (
+              <PayRentDialog
+                propertyId={property.id}
+                ownerId={property.ownerId}
+                defaultAmount={property.price}
+              />
+          )}
+
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">Send an Inquiry</CardTitle>
@@ -272,16 +310,21 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
             </CardContent>
           </Card>
 
-          {isAuthenticated && (
-            <Button
-              variant="outline"
-              className="w-full gap-2 text-muted-foreground"
-              onClick={() => setReportOpen(true)}
-            >
-              <Flag className="h-4 w-4" />
-              Report Property
-            </Button>
-          )}
+          <Button
+            variant="outline"
+            className="w-full gap-2 border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950/30"
+            onClick={() => {
+              if (!isAuthenticated) {
+                toast.error("Please sign in to report a listing")
+                router.push(ROUTES.LOGIN)
+                return
+              }
+              setReportOpen(true)
+            }}
+          >
+            <Flag className="h-4 w-4" />
+            Report Listing / Fake House
+          </Button>
 
           <ReportDialog
             propertyId={property.id}

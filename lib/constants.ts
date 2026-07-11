@@ -21,6 +21,11 @@ export const ROUTES = {
   DASHBOARD_BOOKINGS: "/dashboard/bookings",
   DASHBOARD_BOOKING_DETAIL: (id: string) => `/dashboard/bookings/${id}`,
   DASHBOARD_WALLET: "/dashboard/wallet",
+  DASHBOARD_RENT_PAYMENTS: "/dashboard/rent-payments",
+  DASHBOARD_RENT_PAYMENT_DETAIL: (id: string) => `/dashboard/rent-payments/${id}`,
+  DASHBOARD_TENANCY_AGREEMENTS: "/dashboard/tenancy-agreements",
+  DASHBOARD_TENANCY_AGREEMENT_DETAIL: (id: string) => `/dashboard/tenancy-agreements/${id}`,
+  DASHBOARD_NEW_TENANCY_AGREEMENT: "/dashboard/tenancy-agreements/new",
   DASHBOARD_ADMIN_VERIFICATIONS: "/dashboard/admin/verifications",
   DASHBOARD_ADMIN_REPORTS: "/dashboard/admin/reports",
   AGENTS: "/agents",
@@ -99,6 +104,7 @@ export enum ReportStatus {
 
 export enum BookingStatus {
   PENDING = "pending",
+  AWAITING_AGENT_CONFIRMATION = "awaiting_agent_confirmation",
   CONFIRMED = "confirmed",
   COMPLETED = "completed",
   DISPUTED = "disputed",

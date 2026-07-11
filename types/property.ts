@@ -22,8 +22,11 @@ export interface Property {
   interiorImages: string[]
   exteriorImages: string[]
   streetImages: string[]
+  walkthroughVideo?: string
   isAvailable: boolean
   isFeatured: boolean
+  isFrozen?: boolean
+  frozenReason?: string
   ownerId: string
   createdAt: string
   updatedAt: string
@@ -50,6 +53,7 @@ export interface CreatePropertyRequest {
   interiorImages: string[]
   exteriorImages: string[]
   streetImages?: string[]
+  walkthroughVideo: string
 }
 
 export interface UpdatePropertyRequest extends Partial<CreatePropertyRequest> {}

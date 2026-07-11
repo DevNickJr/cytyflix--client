@@ -6,6 +6,8 @@ import { useAuth } from "@/hooks/use-auth"
 import { ImageUpload } from "@/components/shared/image-upload"
 import { PageLoader } from "@/components/shared/loading-spinner"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, ShieldCheck, Clock, XCircle } from "lucide-react"
@@ -16,6 +18,8 @@ export default function BecomeAgentPage() {
   const submitMutation = useSubmitVerification()
   const [idDocumentUrls, setIdDocumentUrls] = useState<string[]>([])
   const [selfieUrls, setSelfieUrls] = useState<string[]>([])
+  const [utilityBillUrls, setUtilityBillUrls] = useState<string[]>([])
+  const [ninNumber, setNinNumber] = useState("")
 
   if (isLoading) return <PageLoader />
 
@@ -55,10 +59,12 @@ export default function BecomeAgentPage() {
   }
 
   const handleSubmit = async () => {
-    if (idDocumentUrls.length === 0 || selfieUrls.length === 0) return
+    if (idDocumentUrls.length === 0 || selfieUrls.length === 0 || utilityBillUrls.length === 0) return
     await submitMutation.mutateAsync({
       idDocumentUrl: idDocumentUrls[0],
       selfieUrl: selfieUrls[0],
+      utilityBillUrl: utilityBillUrls[0],
+      ninNumber: ninNumber.trim() || undefined,
     })
   }
 
@@ -123,11 +129,54 @@ export default function BecomeAgentPage() {
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader>
+          <CardTitle>Utility Bill</CardTitle>
+          <CardDescription>
+            Upload a recent utility bill (electricity, water, or waste) to verify your address.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ImageUpload
+            value={utilityBillUrls}
+            onChange={setUtilityBillUrls}
+            maxFiles={1}
+            label="Utility Bill"
+            required
+            pathPrefix="verifications/utility-bills"
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Virtual NIN Verification</CardTitle>
+          <CardDescription>
+            Enter your 16-character Virtual NIN (vNIN) from the NIMC mobile app. This will be verified in real-time against the national identity database.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="space-y-2">
+            <Label htmlFor="ninNumber">Virtual NIN (vNIN)</Label>
+            <Input
+              id="ninNumber"
+              value={ninNumber}
+              onChange={(e) => setNinNumber(e.target.value.toUpperCase())}
+              placeholder="e.g. AB12345678901234"
+              maxLength={16}
+            />
+            <p className="text-xs text-muted-foreground">
+              Generate your vNIN from the NIMC mobile app. It is a 16-character alphanumeric code.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
       <Button
         size="lg"
         className="w-full"
         onClick={handleSubmit}
-        disabled={submitMutation.isPending || idDocumentUrls.length === 0 || selfieUrls.length === 0}
+        disabled={submitMutation.isPending || idDocumentUrls.length === 0 || selfieUrls.length === 0 || utilityBillUrls.length === 0}
       >
         {submitMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Submit Verification
