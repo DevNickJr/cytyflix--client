@@ -37,9 +37,12 @@ export enum PropertyType {
   HOUSE = "house",
   STUDIO = "studio",
   DUPLEX = "duplex",
+  BUNGALOW = 'bungalow',
   SELF_CONTAIN = "self_contain",
   SHARED = "shared",
-  LAND = "land",
+  LAND = 'land',
+  OFFICE = 'office',
+  WAREHOUSE = 'warehouse',
 }
 
 export enum ListingType {
@@ -69,6 +72,9 @@ export const PROPERTY_TYPE_LABELS: Record<PropertyType, string> = {
   [PropertyType.SELF_CONTAIN]: "Self Contain",
   [PropertyType.SHARED]: "Shared",
   [PropertyType.LAND]: "Land",
+  [PropertyType.OFFICE]: "Office",
+  [PropertyType.WAREHOUSE]: "Warehouse",
+  [PropertyType.BUNGALOW]: "Bungalow",
 }
 
 export const LISTING_TYPE_LABELS: Record<ListingType, string> = {
