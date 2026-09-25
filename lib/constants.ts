@@ -39,11 +39,13 @@ export enum PropertyType {
   DUPLEX = "duplex",
   SELF_CONTAIN = "self_contain",
   SHARED = "shared",
+  LAND = "land",
 }
 
 export enum ListingType {
   RENT = "rent",
   SHORTLET = "shortlet",
+  SALE = "sale",
 }
 
 export enum RolesEnum {
@@ -66,11 +68,13 @@ export const PROPERTY_TYPE_LABELS: Record<PropertyType, string> = {
   [PropertyType.DUPLEX]: "Duplex",
   [PropertyType.SELF_CONTAIN]: "Self Contain",
   [PropertyType.SHARED]: "Shared",
+  [PropertyType.LAND]: "Land",
 }
 
 export const LISTING_TYPE_LABELS: Record<ListingType, string> = {
   [ListingType.RENT]: "Rent",
   [ListingType.SHORTLET]: "Shortlet",
+  [ListingType.SALE]: "Sale",
 }
 
 export const ROLE_LABELS: Record<RolesEnum, string> = {

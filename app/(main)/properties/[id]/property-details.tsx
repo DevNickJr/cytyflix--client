@@ -43,12 +43,12 @@ interface PropertyDetailClientProps {
 export default function PropertyDetailClient({ property }: PropertyDetailClientProps) {
   const router = useRouter()
   const { isAuthenticated, user } = useAuth()
-//   const { data, isLoading } = useProperty(property.id)
+  //   const { data, isLoading } = useProperty(property.id)
   const { data: saveData } = useSaveStatus(property.id)
   const toggleSave = useToggleSave()
   const sendInquiry = useSendInquiry()
   const [message, setMessage] = useState("")
-  
+
   const [reportOpen, setReportOpen] = useState(false)
   const isSaved = saveData?.data?.isSaved ?? false
 
@@ -58,7 +58,7 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
     sendGTMEvent({ event: 'view', value: 'view_property_page', pId: property.id })
   }, [])
 
-//   if (isLoading) return <PageLoader />
+  //   if (isLoading) return <PageLoader />
   if (!property) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
@@ -101,9 +101,10 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
           {/* Image Gallery by Category */}
           {(() => {
             const allImages = [
-              ...property.exteriorImages,
-              ...property.interiorImages,
-              ...property.streetImages,
+              ...property.images,
+              // ...property.exteriorImages,
+              // ...property.interiorImages,
+              // ...property.streetImages,
             ]
             return allImages.length > 0 ? (
               <div className="rounded-xl overflow-hidden bg-muted">
@@ -157,7 +158,17 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
           )}
 
           {/* Categorized Image Sections */}
-          {property.exteriorImages.length > 0 && (
+          {property.images.length > 0 && (
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Images</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {property.images.map((img, i) => (
+                  <img key={i} src={img} alt={`Exterior ${i + 1}`} className="w-full aspect-video object-cover rounded-lg" />
+                ))}
+              </div>
+            </div>
+          )}
+          {/* {property.exteriorImages.length > 0 && (
             <div className="space-y-3">
               <h3 className="text-lg font-semibold">Exterior</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -177,9 +188,9 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
                 ))}
               </div>
             </div>
-          )}
+          )} */}
 
-          {property.streetImages.length > 0 && (
+          {/* {property.streetImages.length > 0 && (
             <div className="space-y-3">
               <h3 className="text-lg font-semibold">Street / Landmarks</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -188,7 +199,7 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
                 ))}
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Details */}
           <div>
@@ -215,7 +226,7 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
 
             <div className="text-3xl font-bold mb-6">
               {formatPrice(property.price, property.currency)}
-              {property.listingType === "rent" && <span className="text-base font-normal text-muted-foreground">/month</span>}
+              {property.listingType === "rent" && <span className="text-base font-normal text-muted-foreground">/{property.pricePeriod || 'month'}</span>}
               {property.listingType === "shortlet" && <span className="text-base font-normal text-muted-foreground">/night</span>}
             </div>
 
@@ -266,7 +277,7 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
 
         {/* Sidebar */}
         <div className="space-y-4">
-           {isAuthenticated && 
+          {isAuthenticated &&
             (
               <Button
                 variant="outline"
@@ -276,7 +287,7 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
                 <Heart className={`h-4 w-4 ${isSaved ? "fill-red-500 text-red-500" : ""}`} />
                 {isSaved ? "Saved" : "Save Property"}
               </Button>
-              )}
+            )}
 
           {isAuthenticated && property.isAvailable && !property.isFrozen &&
             property.listingType === ListingType.RENT &&
@@ -286,7 +297,7 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
                 ownerId={property.ownerId}
                 defaultAmount={property.price}
               />
-          )}
+            )}
 
           <Card>
             <CardHeader>

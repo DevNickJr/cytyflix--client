@@ -28,6 +28,8 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
     propertyType: initialData?.propertyType ?? PropertyType.APARTMENT,
     listingType: initialData?.listingType ?? ListingType.RENT,
     price: initialData?.price ?? 0,
+    pricePeriod: initialData?.pricePeriod ?? "month",
+    negotiable: initialData?.negotiable ?? false,
     currency: initialData?.currency ?? "NGN",
     address: initialData?.address ?? "",
     city: initialData?.city ?? "",
@@ -40,9 +42,10 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
     bathrooms: initialData?.bathrooms ?? 1,
     amenities: initialData?.amenities ?? [],
     proofOfOwnership: initialData?.proofOfOwnership ?? [],
-    interiorImages: initialData?.interiorImages ?? [],
-    exteriorImages: initialData?.exteriorImages ?? [],
-    streetImages: initialData?.streetImages ?? [],
+    images: initialData?.images ?? [],
+    // interiorImages: initialData?.interiorImages ?? [],
+    // exteriorImages: initialData?.exteriorImages ?? [],
+    // streetImages: initialData?.streetImages ?? [],
     walkthroughVideo: initialData?.walkthroughVideo ?? "",
   })
 
@@ -50,7 +53,7 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
     city: form.city,
     lga: form.lga,
     state: form.state,
-    resetLga: () =>  updateField('lga', ''),
+    resetLga: () => updateField('lga', ''),
     resetCity: () => updateField('city', ''),
   })
 
@@ -127,11 +130,8 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
               </Select>
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="price">Price</Label>
-              <Input id="price" type="number" value={form.price || ""} onChange={(e) => updateField("price", Number(e.target.value))} required min={0} />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
             <div className="space-y-2">
               <Label htmlFor="bedrooms">Bedrooms</Label>
               <Input id="bedrooms" type="number" value={form.bedrooms || ""} onChange={(e) => updateField("bedrooms", Number(e.target.value))} min={0} />
@@ -139,6 +139,35 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
             <div className="space-y-2">
               <Label htmlFor="bathrooms">Bathrooms</Label>
               <Input id="bathrooms" type="number" value={form.bathrooms || ""} onChange={(e) => updateField("bathrooms", Number(e.target.value))} min={0} />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="price">Price</Label>
+              <Input id="price" type="number" value={form.price || ""} onChange={(e) => updateField("price", Number(e.target.value))} required min={0} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="pricePeriod">Price Period</Label>
+              <Select value={form.pricePeriod} onValueChange={(val) => val && updateField("pricePeriod", val as "month" | "year")}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="month">Per Month</SelectItem>
+                  <SelectItem value="year">Per Year</SelectItem>
+                  <SelectItem value="day">Per Day</SelectItem>
+                  <SelectItem value="week">Per Week</SelectItem>
+                  <SelectItem value="one_off">One-off</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="negotiable">Negotiable</Label>
+              <Select value={form.negotiable.toString()} onValueChange={(val) => updateField("negotiable", val === "true")}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="true">Yes</SelectItem>
+                  <SelectItem value="false">No</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardContent>
@@ -186,7 +215,7 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
           </div>
           <div className="space-y-2">
             <Label htmlFor="address">Address</Label>
-            <Textarea id="address" disabled={!form.state || !form.city}  value={form.address} onChange={(e) => updateField("address", e.target.value)} required minLength={5} placeholder="Street address" />
+            <Textarea id="address" disabled={!form.state || !form.city} value={form.address} onChange={(e) => updateField("address", e.target.value)} required minLength={5} placeholder="Street address" />
           </div>
         </CardContent>
       </Card>
@@ -219,6 +248,14 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
         </CardHeader>
         <CardContent className="space-y-6">
           <ImageUpload
+            value={form.images}
+            onChange={(urls) => updateField("images", urls)}
+            maxFiles={5}
+            label="Images"
+            required
+            pathPrefix="properties/images"
+          />
+          {/* <ImageUpload
             value={form.interiorImages}
             onChange={(urls) => updateField("interiorImages", urls)}
             maxFiles={5}
@@ -240,14 +277,7 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
             maxFiles={5}
             label="Street Sign / Nearby Landmarks"
             pathPrefix="properties/street"
-          />
-          <ImageUpload
-            value={form.proofOfOwnership}
-            onChange={(urls) => updateField("proofOfOwnership", urls)}
-            maxFiles={5}
-            label="Proof of Ownership / Mandate Letter (optional)"
-            pathPrefix="properties/proof-of-ownership"
-          />
+          /> */}
         </CardContent>
       </Card>
 
@@ -260,10 +290,25 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
         </CardHeader>
         <CardContent>
           <VideoUpload
-            value={form.walkthroughVideo}
+            value={form.walkthroughVideo || ''}
             onChange={(url) => updateField("walkthroughVideo", url)}
             pathPrefix="properties/walkthrough-videos"
-            // required
+          // required
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Proof of Ownership</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <ImageUpload
+            value={form.proofOfOwnership}
+            onChange={(urls) => updateField("proofOfOwnership", urls)}
+            maxFiles={5}
+            label="Proof of Ownership / Mandate Letter (optional)"
+            pathPrefix="properties/proof-of-ownership"
           />
         </CardContent>
       </Card>

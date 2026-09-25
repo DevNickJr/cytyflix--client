@@ -7,6 +7,8 @@ export interface Property {
   propertyType: PropertyType
   listingType: ListingType
   price: number
+  pricePeriod: 'day' | 'week' | 'month' | 'year' | 'one_off',
+  negotiable: boolean,
   currency: string
   address: string
   city: string
@@ -19,9 +21,10 @@ export interface Property {
   bathrooms: number
   amenities: string[]
   proofOfOwnership: string[]
-  interiorImages: string[]
-  exteriorImages: string[]
-  streetImages: string[]
+  images: string[]
+  // interiorImages: string[]
+  // exteriorImages: string[]
+  // streetImages: string[]
   walkthroughVideo?: string
   isAvailable: boolean
   isFeatured: boolean
@@ -38,6 +41,8 @@ export interface CreatePropertyRequest {
   propertyType: PropertyType
   listingType: ListingType
   price: number
+  pricePeriod: 'day' | 'week' | 'month' | 'year' | 'one_off',
+  negotiable: boolean,
   currency?: string
   address: string
   city: string
@@ -50,13 +55,14 @@ export interface CreatePropertyRequest {
   bathrooms?: number
   amenities?: string[]
   proofOfOwnership: string[]
-  interiorImages: string[]
-  exteriorImages: string[]
-  streetImages?: string[]
-  walkthroughVideo: string
+  images: string[]
+  // interiorImages: string[]
+  // exteriorImages: string[]
+  // streetImages?: string[]
+  walkthroughVideo?: string
 }
 
-export interface UpdatePropertyRequest extends Partial<CreatePropertyRequest> {}
+export interface UpdatePropertyRequest extends Partial<CreatePropertyRequest> { }
 
 export interface PropertyFilters {
   city?: string
