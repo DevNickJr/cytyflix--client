@@ -4,7 +4,7 @@ export interface SavedListing {
   id: string
   userId: string
   propertyId: string
-  property?: Property
+  property: Property
   createdAt: string
 }
 

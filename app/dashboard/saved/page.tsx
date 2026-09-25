@@ -33,7 +33,7 @@ export default function SavedListingsPage() {
         />
       ) : (
         <>
-          <PropertyGrid properties={properties as any} />
+          <PropertyGrid properties={properties} />
           {data && data.totalPages > 1 && (
             <div className="mt-8">
               <Pagination page={page} totalPages={data.totalPages} onPageChange={setPage} />

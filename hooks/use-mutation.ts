@@ -26,12 +26,12 @@ export function useMutationAction<TData = unknown, TVariables = void>(
         invalidateKeys.forEach((key) => queryClient.invalidateQueries({ queryKey: key }))
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(options?.onSuccess as any)?.(...args)
+      ; (options?.onSuccess)?.(...args)
     },
     onError: (...args) => {
       toast.error(errorMessage || args[0]?.message || "Something went wrong")
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(options?.onError as any)?.(...args)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ; (options?.onError)?.(...args)
     },
   })
 }
