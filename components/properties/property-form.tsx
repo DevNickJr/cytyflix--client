@@ -191,9 +191,9 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
               </Select>
             </div>
             <div className="space-y-2 w-full">
-              <Label>lgas</Label>
+              <Label>LGA</Label>
               <Select disabled={!form.state} value={form.lga} onValueChange={(val) => val && updateField("lga", val)}>
-                <SelectTrigger className={'w-full'}><SelectValue placeholder="Select lga" /></SelectTrigger>
+                <SelectTrigger className={'w-full'}><SelectValue placeholder="Select LGA" /></SelectTrigger>
                 <SelectContent className={'w-full'}>
                   {lgas.map((lga) => (
                     <SelectItem key={lga?.name} value={lga?.name}>{lga?.name}</SelectItem>
@@ -202,7 +202,7 @@ export function PropertyForm({ initialData, onSubmit, isLoading, submitLabel = "
               </Select>
             </div>
             <div className="space-y-2 w-full">
-              <Label>City/Ward</Label>
+              <Label>City</Label>
               <Select value={form.city} disabled={!form.state || !form.lga} onValueChange={(val) => val && updateField("city", val)}>
                 <SelectTrigger className={'w-full'}><SelectValue placeholder="Select city" /></SelectTrigger>
                 <SelectContent className={'w-full'}>
