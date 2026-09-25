@@ -8,13 +8,13 @@ export function usePlaces({
     resetLga,
     resetCity,
 }: {
-    state?: string; 
-    lga?: string; 
-    city?: string; 
+    state?: string;
+    lga?: string;
+    city?: string;
     resetLga: () => void;
     resetCity: () => void;
 }) {
-    const [lgas, setLgas] = useState<{ name: string; wards: { name: string; latitude: number; longitude: number}[]}[]>([]);
+    const [lgas, setLgas] = useState<{ name: string; cities: { name: string; latitude: number; longitude: number }[] }[]>([]);
     const [cities, setCities] = useState<{
         name: string;
         latitude: number;
@@ -26,13 +26,13 @@ export function usePlaces({
             return setLgas([]);
         }
 
-        const lgas = NIGERIAN_STATES?.find(stateF => stateF.state === state)
-        setLgas(lgas?.lgas || [])
+        const stateFound = NIGERIAN_STATES?.find(stateF => stateF.state === state)
+        setLgas(stateFound?.lgas || [])
         resetLga?.()
         resetCity?.()
         // onFilterChange({ lga: undefined })
         // onFilterChange({ city: undefined })
-        
+
     }, [state])
 
     useEffect(() => {
@@ -41,10 +41,10 @@ export function usePlaces({
         }
 
         const cities = lgas?.find(lgaF => lgaF.name == lga)
-        setCities(cities?.wards || [])
+        setCities(cities?.cities || [])
         resetCity?.()
     }, [lga])
-    
+
 
     return {
         cities,
