@@ -30,7 +30,7 @@ export function PropertyCard({ property, isSaved }: PropertyCardProps) {
     }
   }
 
-  const thumbnail = property.exteriorImages?.[0] || property.interiorImages?.[0] || property.proofOfOwnership?.[0]
+  const thumbnail = property.images?.[0];
 
   return (
     <motion.div

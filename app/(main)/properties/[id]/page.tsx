@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic'; 
+export const dynamic = 'force-dynamic';
 
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
@@ -47,13 +47,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       type: "website",
       siteName: "CytyFlix",
-      images: [{ url: property?.interiorImages?.[0], alt: title }, { url: property?.exteriorImages?.[0], alt: title }]
+      images: [{ url: property?.images?.[0], alt: title }, { url: property?.images?.[0], alt: title }]
     },
     twitter: {
       card: "summary_large_image",
       title: `${title} - property on CytyFlix`,
       description,
-      images: [property?.interiorImages?.[0], property?.exteriorImages?.[0]],
+      images: [property?.images?.[0], property?.images?.[0]],
     },
   }
 }
