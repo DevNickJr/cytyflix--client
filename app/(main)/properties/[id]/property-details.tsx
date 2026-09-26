@@ -141,16 +141,25 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
           {property.walkthroughVideo && (
             <div className="space-y-3">
               <h3 className="text-lg font-semibold">Walkthrough Video</h3>
-              <VideoDisplayer src={property.walkthroughVideo} />
-              <h3 className="text-lg font-semibold">Walkthrough Video 2</h3>
+              {/* <VideoDisplayer src={property.walkthroughVideo} /> */}
+              {/* <h3 className="text-lg font-semibold">Walkthrough Video 2</h3> */}
               <video
+                controls
+                crossOrigin="anonymous" // 💡 THIS IS CRITICAL
+                className="w-full rounded-lg aspect-video"
+                preload="metadata"
+              >
+                <source src={property.walkthroughVideo} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              {/* <video
                 src={property.walkthroughVideo}
                 autoPlay
                 controls
                 playsInline
                 className="w-full rounded-lg aspect-video"
                 preload="metadata"
-              />
+              /> */}
             </div>
           )}
 
