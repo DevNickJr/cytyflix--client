@@ -36,6 +36,7 @@ import { EventType } from "@/types/analytics"
 import { sendGTMEvent } from "@next/third-parties/google"
 import { Property } from "@/types"
 import Image from "next/image"
+import VideoDisplayer from "@/components/shared/video-displayer"
 
 interface PropertyDetailClientProps {
   property: Property
@@ -140,12 +141,12 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
           {property.walkthroughVideo && (
             <div className="space-y-3">
               <h3 className="text-lg font-semibold">Walkthrough Video</h3>
-              <video
-                src={property.walkthroughVideo}
+              <VideoDisplayer src={property.walkthroughVideo} />
+              {/* <video
                 controls
                 className="w-full rounded-lg aspect-video"
                 preload="metadata"
-              />
+              /> */}
             </div>
           )}
 
