@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
+import { LoadingSpinner } from '../shared/loading-spinner';
 
 export interface VideoProcessorProps {
     file?: File;
@@ -177,7 +178,7 @@ export default function VideoProcessor({ file, onProcessComplete, onCancel }: Vi
         }
     };
 
-    if (!loaded) return <div className="text-center p-4">Loading core processor libraries...</div>;
+    if (!loaded) return <div className="text-center p-4 py-8"><LoadingSpinner /></div>;
 
     return (
         <div className="max-w-2xl mx-auto p-4 space-y-6">
