@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/use-auth"
 import { useToggleSave } from "@/hooks/use-saved-listings"
 import type { Property } from "@/types/property"
 import { motion } from "motion/react"
+import Image from "next/image"
 
 interface PropertyCardProps {
   property: Property
@@ -42,8 +43,10 @@ export function PropertyCard({ property, isSaved }: PropertyCardProps) {
         <Card className="overflow-hidden group cursor-pointer hover:shadow-md transition-shadow">
           <div className="relative aspect-[16/10] bg-muted overflow-hidden">
             {thumbnail ? (
-              <img
+              <Image
                 src={thumbnail}
+                width={500}
+                height={500}
                 alt={property.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Upload, X, Loader2, ImageIcon } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
+import Image from "next/image"
 
 interface ImageUploadProps {
   value: string[]
@@ -152,9 +153,11 @@ export function ImageUpload({
               key={`${url}-${index}`}
               className="relative group aspect-video bg-muted rounded-lg overflow-hidden"
             >
-              <img
+              <Image
                 src={url}
                 alt={`Upload ${index + 1}`}
+                width={500}
+                height={500}
                 className="w-full h-full object-cover"
               />
               <Button

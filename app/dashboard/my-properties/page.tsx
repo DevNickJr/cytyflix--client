@@ -15,6 +15,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog"
 import { Building2, Plus, Pencil, Trash2, MapPin } from "lucide-react"
+import Image from "next/image"
 
 export default function MyPropertiesPage() {
   const [page, setPage] = useState(1)
@@ -59,7 +60,7 @@ export default function MyPropertiesPage() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="w-full sm:w-40 h-28 rounded-lg overflow-hidden bg-muted shrink-0">
                     {(property.images?.length > 0) ? (
-                      <img src={property.images?.[0]} alt={property.title} className="w-full h-full object-cover" />
+                      <Image src={property.images?.[0]} alt={property.title} width={500} height={500} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <Building2 className="h-8 w-8 text-muted-foreground/40" />

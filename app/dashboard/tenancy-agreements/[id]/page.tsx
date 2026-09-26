@@ -20,6 +20,7 @@ import {
   PenTool,
 } from "lucide-react"
 import { AgreementStatus } from "@/types/tenancy-agreement"
+import Image from "next/image"
 
 const STATUS_LABEL: Record<string, string> = {
   [AgreementStatus.DRAFT]: "Draft",
@@ -132,9 +133,11 @@ export default function AgreementDetailPage({
                 <p className="text-sm font-medium">Landlord</p>
                 {agreement.landlordSignature ? (
                   <>
-                    <img
+                    <Image
                       src={agreement.landlordSignature}
                       alt="Landlord signature"
+                      width={500}
+                      height={500}
                       className="h-20 border rounded bg-white"
                     />
                     <div className="flex items-center gap-1 text-xs text-green-600">
@@ -155,9 +158,11 @@ export default function AgreementDetailPage({
                 <p className="text-sm font-medium">Tenant</p>
                 {agreement.tenantSignature ? (
                   <>
-                    <img
+                    <Image
                       src={agreement.tenantSignature}
                       alt="Tenant signature"
+                      width={500}
+                      height={500}
                       className="h-20 border rounded bg-white"
                     />
                     <div className="flex items-center gap-1 text-xs text-green-600">

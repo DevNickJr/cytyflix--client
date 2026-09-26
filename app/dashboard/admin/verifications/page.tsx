@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dialog"
 import { ShieldCheck, Loader2, CheckCircle, XCircle } from "lucide-react"
 import { formatDate } from "@/lib/utils"
+import Image from "next/image"
 
 const STATUS_BADGE: Record<string, "default" | "secondary" | "destructive"> = {
   pending: "secondary",
@@ -87,14 +88,18 @@ export default function AdminVerificationsPage() {
               <CardContent className="p-4">
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="flex gap-3 flex-1">
-                    <img
+                    <Image
                       src={v.idDocumentUrl}
                       alt="ID Document"
+                      width={500}
+                      height={500}
                       className="w-24 h-24 object-cover rounded-lg border"
                     />
-                    <img
+                    <Image
                       src={v.selfieUrl}
                       alt="Selfie"
+                      width={500}
+                      height={500}
                       className="w-24 h-24 object-cover rounded-lg border"
                     />
                     <div className="flex-1">

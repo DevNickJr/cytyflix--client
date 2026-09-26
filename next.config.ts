@@ -13,6 +13,15 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: '/_next/image(.*)',
+        headers: [
+          {
+            key: 'Cross-Origin-Resource-Policy',
+            value: 'cross-origin',
+          },
+        ],
+      },
+      {
         source: '/(.*)',
         headers: [
           {
@@ -22,15 +31,6 @@ const nextConfig: NextConfig = {
           {
             key: 'Cross-Origin-Embedder-Policy',
             value: 'require-corp',
-          },
-        ],
-      },
-      {
-        source: '/_next/image(.*)',
-        headers: [
-          {
-            key: 'Cross-Origin-Resource-Policy',
-            value: 'cross-origin',
           },
         ],
       },

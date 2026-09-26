@@ -35,6 +35,7 @@ import { useTrackPageView } from "@/hooks/use-analytics"
 import { EventType } from "@/types/analytics"
 import { sendGTMEvent } from "@next/third-parties/google"
 import { Property } from "@/types"
+import Image from "next/image"
 
 interface PropertyDetailClientProps {
   property: Property
@@ -109,15 +110,19 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
             return allImages.length > 0 ? (
               <div className="rounded-xl overflow-hidden bg-muted">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
-                  <img
+                  <Image
                     src={allImages[0]}
                     alt={property.title}
+                    width={500}
+                    height={500}
                     className="w-full aspect-[4/3] object-cover md:row-span-2"
                   />
                   {allImages.slice(1, 3).map((img, i) => (
-                    <img
+                    <Image
                       key={i}
                       src={img}
+                      width={500}
+                      height={500}
                       alt={`${property.title} ${i + 2}`}
                       className="w-full aspect-video object-cover hidden md:block"
                     />
@@ -163,7 +168,8 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
               <h3 className="text-lg font-semibold">Images</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {property.images.map((img, i) => (
-                  <img key={i} src={img} alt={`Exterior ${i + 1}`} className="w-full aspect-video object-cover rounded-lg" />
+                  <Image key={i} src={img} width={500}
+                    height={500} alt={`Image ${i + 1}`} className="w-full aspect-video object-cover rounded-lg" />
                 ))}
               </div>
             </div>
@@ -173,7 +179,7 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
               <h3 className="text-lg font-semibold">Exterior</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {property.exteriorImages.map((img, i) => (
-                  <img key={i} src={img} alt={`Exterior ${i + 1}`} className="w-full aspect-video object-cover rounded-lg" />
+                  <Image key={i} src={img} alt={`Exterior ${i + 1}`} className="w-full aspect-video object-cover rounded-lg" />
                 ))}
               </div>
             </div>
@@ -184,7 +190,7 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
               <h3 className="text-lg font-semibold">Interior</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {property.interiorImages.map((img, i) => (
-                  <img key={i} src={img} alt={`Interior ${i + 1}`} className="w-full aspect-video object-cover rounded-lg" />
+                  <Image key={i} src={img} alt={`Interior ${i + 1}`} className="w-full aspect-video object-cover rounded-lg" />
                 ))}
               </div>
             </div>
@@ -195,7 +201,7 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
               <h3 className="text-lg font-semibold">Street / Landmarks</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {property.streetImages.map((img, i) => (
-                  <img key={i} src={img} alt={`Street ${i + 1}`} className="w-full aspect-video object-cover rounded-lg" />
+                  <Image key={i} src={img} alt={`Street ${i + 1}`} className="w-full aspect-video object-cover rounded-lg" />
                 ))}
               </div>
             </div>
