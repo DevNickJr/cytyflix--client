@@ -18,23 +18,13 @@ export default function VideoProcessor({ file, onProcessComplete, onCancel }: Vi
     const [videoSrc, setVideoSrc] = useState<string | null>(file ? URL.createObjectURL(file) : null);
     const [videoFile, setVideoFile] = useState<File | null>(file || null);
     const [processing, setProcessing] = useState(false);
-    const [outputSrc, setOutputSrc] = useState<string | null>(null);
-
-    // Video metadata states
+    
     const [duration, setDuration] = useState(0);
-    const [videoSize, setVideoSize] = useState({ width: 0, height: 0 });
+    const [startTime, setStartTime] = useState(0);
+    const [endTime, setEndTime] = useState(60);
 
-    // Cropping States (percentages relative to video dimensions)
-    const [crop, setCrop] = useState({ x: 10, y: 10, width: 80, height: 80 });
-    const [isDragging, setIsDragging] = useState(false);
-    const [isResizing, setIsResizing] = useState(false);
-    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-    const [initialCrop, setInitialCrop] = useState({ x: 0, y: 0, width: 0, height: 0 });
-
-    const containerRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
 
-    // Load FFmpeg binaries on mount
     useEffect(() => {
         loadFFmpeg();
     }, []);
@@ -52,124 +42,84 @@ export default function VideoProcessor({ file, onProcessComplete, onCancel }: Vi
         setLoaded(true);
     };
 
-    // Handle file select
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             setVideoFile(file);
             setVideoSrc(URL.createObjectURL(file));
-            setOutputSrc(null);
+            setStartTime(0);
         }
     };
 
-    // Extract dimensions and enforce max duration
     const handleLoadedMetadata = () => {
         if (videoRef.current) {
             const vid = videoRef.current;
             setDuration(vid.duration);
-            setVideoSize({ width: vid.videoWidth, height: vid.videoHeight });
+            setEndTime(Math.min(vid.duration, 60));
 
             if (vid.duration > 60) {
-                toast.info("Note: This video is longer than 60 seconds. It will be automatically trimmed to the first 60 seconds.");
+                toast.info("Note: This video is longer than 60 seconds. It will be automatically trimmed.");
             }
         }
     };
 
-    // Mouse interaction logic for the overlay crop box
-    const handleMouseDown = (e: React.MouseEvent, type: 'drag' | 'resize') => {
-        e.preventDefault();
-        if (type === 'drag') setIsDragging(true);
-        if (type === 'resize') setIsResizing(true);
-
-        setDragStart({ x: e.clientX, y: e.clientY });
-        setInitialCrop({ ...crop });
-    };
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        if (!isDragging && !isResizing) return;
-        if (!containerRef.current) return;
-
-        const rect = containerRef.current.getBoundingClientRect();
-        const deltaX = ((e.clientX - dragStart.x) / rect.width) * 100;
-        const deltaY = ((e.clientY - dragStart.y) / rect.height) * 100;
-
-        if (isDragging) {
-            let newX = initialCrop.x + deltaX;
-            let newY = initialCrop.y + deltaY;
-
-            // Bound checking
-            if (newX < 0) newX = 0;
-            if (newY < 0) newY = 0;
-            if (newX + initialCrop.width > 100) newX = 100 - initialCrop.width;
-            if (newY + initialCrop.height > 100) newY = 100 - initialCrop.height;
-
-            setCrop((prev) => ({ ...prev, x: newX, y: newY }));
-        }
-
-        if (isResizing) {
-            let newWidth = initialCrop.width + deltaX;
-            let newHeight = initialCrop.height + deltaY;
-
-            // Bound checking
-            if (newWidth < 10) newWidth = 10;
-            if (newHeight < 10) newHeight = 10;
-            if (initialCrop.x + newWidth > 100) newWidth = 100 - initialCrop.x;
-            if (initialCrop.y + newHeight > 100) newHeight = 100 - initialCrop.y;
-
-            setCrop((prev) => ({ ...prev, width: newWidth, height: newHeight }));
+    const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let val = Number(e.target.value);
+        if (val < 0) val = 0;
+        if (val >= endTime - 20) val = endTime - 20;
+        setStartTime(val);
+        if (videoRef.current) {
+            videoRef.current.currentTime = val;
         }
     };
 
-    const handleMouseUp = () => {
-        setIsDragging(false);
-        setIsResizing(false);
+    const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let val = Number(e.target.value);
+        if (val > duration) val = duration;
+        if (val <= startTime + 20) val = startTime + 20;
+        if (val - startTime > 60) val = startTime + 60;
+        setEndTime(val);
+        if (videoRef.current) {
+            videoRef.current.currentTime = val;
+        }
     };
 
-    // Process video using FFmpeg
     const processVideo = async () => {
         if (!ffmpeg || !videoFile) return;
+        
+        const trimDuration = endTime - startTime;
+        if (trimDuration < 20 || trimDuration > 60) {
+            toast.error("Video duration must be between 20 and 60 seconds.");
+            return;
+        }
+
         setProcessing(true);
 
         try {
-            // Calculate pixel coordinates from crop percentages
-            let cropWidth = Math.floor((crop.width / 100) * videoSize.width);
-            let cropHeight = Math.floor((crop.height / 100) * videoSize.height);
-            let cropX = Math.floor((crop.x / 100) * videoSize.width);
-            let cropY = Math.floor((crop.y / 100) * videoSize.height);
-
-            // Ensure even numbers for h264
-            cropWidth = cropWidth % 2 === 0 ? cropWidth : cropWidth - 1;
-            cropHeight = cropHeight % 2 === 0 ? cropHeight : cropHeight - 1;
-
             const inputName = 'input.mp4';
             const outputName = 'output.mp4';
 
-            // Write file to FFmpeg virtual filesystem
             await ffmpeg.writeFile(inputName, await fetchFile(videoFile));
 
-            // Construct FFmpeg command flags:
-            // -t 60 trims to 60 seconds max
-            // -vf crop=w:h:x:y applies the spatial crop matrix
             await ffmpeg.exec([
+                '-ss', startTime.toString(),
                 '-i', inputName,
-                '-t', '60',
-                '-vf', `crop=${cropWidth}:${cropHeight}:${cropX}:${cropY}`,
+                '-t', trimDuration.toString(),
+                '-c:v', 'copy',
                 '-c:a', 'copy',
                 outputName
             ]);
 
             const data = await ffmpeg.readFile(outputName);
-
-            // Create a clean, safe copy that doesn't reference SharedArrayBuffer
             const dataArray = Uint8Array.from(data as Uint8Array);
-
             const blob = new Blob([dataArray], { type: 'video/mp4' });
-            setOutputSrc(URL.createObjectURL(blob));
 
             if (onProcessComplete) {
-                const outName = videoFile.name.replace(/\.[^/.]+$/, "") + "-cropped.mp4";
+                const outName = videoFile.name.replace(/\.[^/.]+$/, "") + "-trimmed.mp4";
                 const processedFile = new File([blob], outName, { type: 'video/mp4' });
                 onProcessComplete(processedFile);
+            } else {
+                toast.success("Video processed successfully!");
             }
         } catch (error) {
             console.error("FFmpeg execution error:", error);
@@ -182,95 +132,89 @@ export default function VideoProcessor({ file, onProcessComplete, onCancel }: Vi
     if (!loaded) return <div className="text-center p-4 py-8"><LoadingSpinner /></div>;
 
     return (
-        <div className="max-w-2xl mx-auto p-4 space-y-6">
+        <div className="max-w-2xl mx-auto p-4 space-y-6 bg-white border rounded-lg shadow-sm mt-4">
             {!file && (
                 <div className="flex flex-col items-center border-2 border-dashed border-gray-300 p-6 rounded-lg bg-gray-50">
                     <input type="file" accept="video/*" onChange={handleFileChange} className="mb-2" />
-                    <p className="text-xs text-gray-500">Upload any video configuration to trim and crop</p>
+                    <p className="text-xs text-gray-500">Upload a video to trim</p>
                 </div>
             )}
 
             {onCancel && (
-                <button type="button" onClick={onCancel} className="text-sm text-gray-500 hover:text-gray-700 underline">
-                    Cancel processing
-                </button>
+                <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-semibold">Trim Video</h3>
+                    <button type="button" onClick={onCancel} className="text-sm text-red-500 hover:text-red-700 font-medium">
+                        Cancel
+                    </button>
+                </div>
             )}
 
             {videoSrc && (
-                <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">1. Adjust Crop Area & Preview Max 60s</h3>
-
-                    {/* Cropper UI Wrapper */}
-                    <div
-                        ref={containerRef}
-                        onMouseMove={handleMouseMove}
-                        onMouseUp={handleMouseUp}
-                        onMouseLeave={handleMouseUp}
-                        className="relative select-none overflow-hidden bg-black rounded"
-                        style={{ maxHeight: '500px' }}
-                    >
+                <div className="space-y-6">
+                    <div className="relative bg-black rounded-lg overflow-hidden flex justify-center border">
                         <video
                             ref={videoRef}
                             src={videoSrc}
                             onLoadedMetadata={handleLoadedMetadata}
-                            autoPlay
                             controls
                             playsInline
-                            muted
-                            className="w-full h-auto block max-h-[500px] object-contain"
+                            className="w-full max-h-[400px] object-contain"
                         />
+                    </div>
 
-                        {/* Absolute Transparent Dim Overlay Layer */}
-                        <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-
-                        {/* Clear Crop Target Box Area */}
-                        <div
-                            style={{
-                                position: 'absolute',
-                                left: `${crop.x}%`,
-                                top: `${crop.y}%`,
-                                width: `${crop.width}%`,
-                                height: `${crop.height}%`,
-                                boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)',
-                            }}
-                            className="border-2 border-emerald-400 absolute cursor-move flex items-center justify-center"
-                            onMouseDown={(e) => handleMouseDown(e, 'drag')}
-                        >
-                            {/* Resize Handle Target Anchor */}
-                            <div
-                                className="absolute right-0 bottom-0 w-4 h-4 bg-emerald-400 cursor-se-resize rounded-tl-sm shadow"
-                                onMouseDown={(e) => {
-                                    e.stopPropagation();
-                                    handleMouseDown(e, 'resize');
-                                }}
+                    <div className="bg-gray-50 p-4 rounded-lg border space-y-4">
+                        <div className="flex justify-between text-sm text-gray-600">
+                            <span>Start Time (sec)</span>
+                            <span>End Time (sec)</span>
+                        </div>
+                        
+                        <div className="flex items-center space-x-4">
+                            <input
+                                type="number"
+                                min={0}
+                                max={Math.max(0, endTime - 20)}
+                                value={Math.round(startTime)}
+                                onChange={handleStartTimeChange}
+                                className="w-24 p-2 border rounded"
                             />
-                            <span className="text-[10px] bg-emerald-400 text-black px-1 py-0.5 rounded absolute top-1 left-1 font-mono font-bold">
-                                Crop Region
-                            </span>
+                            
+                            <div className="flex-1 px-4 relative h-10 flex items-center">
+                                {/* Visual representation of the trim duration */}
+                                <div className="absolute w-full h-2 bg-gray-200 rounded-full left-0"></div>
+                                {duration > 0 && (
+                                    <div 
+                                        className="absolute h-2 bg-emerald-500 rounded-full"
+                                        style={{
+                                            left: `${(startTime / duration) * 100}%`,
+                                            width: `${((endTime - startTime) / duration) * 100}%`
+                                        }}
+                                    ></div>
+                                )}
+                            </div>
+
+                            <input
+                                type="number"
+                                min={startTime + 20}
+                                max={duration}
+                                value={Math.round(endTime)}
+                                onChange={handleEndTimeChange}
+                                className="w-24 p-2 border rounded"
+                            />
+                        </div>
+                        
+                        <div className="flex justify-between text-xs text-gray-500">
+                            <span>Total Length: {duration.toFixed(1)}s</span>
+                            <span className="font-semibold text-emerald-600">Trimmed Length: {(endTime - startTime).toFixed(1)}s</span>
                         </div>
                     </div>
 
                     <button
                         onClick={processVideo}
                         disabled={processing}
-                        className="w-full bg-emerald-600 text-white py-2 px-4 rounded hover:bg-emerald-700 disabled:bg-gray-400 font-medium transition"
+                        className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg hover:bg-emerald-700 disabled:bg-gray-400 font-medium transition shadow-sm"
                     >
-                        {processing ? "Executing Transcode Filter..." : "Crop & Trim Video"}
+                        {processing ? "Processing Video..." : "Trim & Upload Video"}
                     </button>
-                </div>
-            )}
-
-            {outputSrc && (
-                <div className="mt-8 border-t pt-6 space-y-2">
-                    <h3 className="text-lg font-semibold text-emerald-600">2. Processed Output Video</h3>
-                    <video src={outputSrc} controls className="w-full rounded border bg-black shadow" />
-                    <a
-                        href={outputSrc}
-                        download="cropped-trimmed.mp4"
-                        className="inline-block text-sm text-emerald-600 underline font-semibold mt-2"
-                    >
-                        Download Rendered Video File
-                    </a>
                 </div>
             )}
         </div>
