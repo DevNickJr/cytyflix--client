@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import { LoadingSpinner } from '../shared/loading-spinner';
+import { toast } from 'sonner';
 
 export interface VideoProcessorProps {
     file?: File;
@@ -69,7 +70,7 @@ export default function VideoProcessor({ file, onProcessComplete, onCancel }: Vi
             setVideoSize({ width: vid.videoWidth, height: vid.videoHeight });
 
             if (vid.duration > 60) {
-                alert("Note: This video is longer than 60 seconds. It will be automatically trimmed to the first 60 seconds.");
+                toast.info("Note: This video is longer than 60 seconds. It will be automatically trimmed to the first 60 seconds.");
             }
         }
     };
@@ -172,7 +173,7 @@ export default function VideoProcessor({ file, onProcessComplete, onCancel }: Vi
             }
         } catch (error) {
             console.error("FFmpeg execution error:", error);
-            alert("Error processing video.");
+            toast.error("Error processing video.");
         } finally {
             setProcessing(false);
         }
