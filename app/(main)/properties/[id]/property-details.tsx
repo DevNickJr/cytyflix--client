@@ -110,13 +110,14 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
             ]
             return allImages.length > 0 ? (
               <div className="rounded-xl overflow-hidden bg-muted">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-1 items-stretch">
                   <Image
                     src={allImages[0]}
                     alt={property.title}
                     width={500}
                     height={500}
-                    className="w-full object-cover md:row-span-2"
+                    {/* Changing the main aspect ratio to blend better with side-by-side elements */}
+                    className="w-full aspect-[16/10] md:aspect-square object-cover md:row-span-2"
                   />
                   {allImages.slice(1, 3).map((img, i) => (
                     <Image
@@ -125,7 +126,7 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
                       width={500}
                       height={500}
                       alt={`${property.title} ${i + 2}`}
-                      className="w-full object-cover hidden md:block"
+                      className="w-full aspect-video object-cover hidden md:block"
                     />
                   ))}
                 </div>
