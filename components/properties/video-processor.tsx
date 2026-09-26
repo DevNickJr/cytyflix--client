@@ -156,12 +156,14 @@ export default function VideoProcessor({ file, onProcessComplete, onCancel }: Vi
                 outputName
             ]);
 
-            // Read output file
             const data = await ffmpeg.readFile(outputName);
-            const dataArray = data as Uint8Array;
-            const blob = new Blob([dataArray.buffer], { type: 'video/mp4' });
+
+            // Create a clean, safe copy that doesn't reference SharedArrayBuffer
+            const dataArray = Uint8Array.from(data as Uint8Array);
+
+            const blob = new Blob([dataArray], { type: 'video/mp4' });
             setOutputSrc(URL.createObjectURL(blob));
-            
+
             if (onProcessComplete) {
                 const outName = videoFile.name.replace(/\.[^/.]+$/, "") + "-cropped.mp4";
                 const processedFile = new File([blob], outName, { type: 'video/mp4' });
@@ -185,7 +187,7 @@ export default function VideoProcessor({ file, onProcessComplete, onCancel }: Vi
                     <p className="text-xs text-gray-500">Upload any video configuration to trim and crop</p>
                 </div>
             )}
-            
+
             {onCancel && (
                 <button type="button" onClick={onCancel} className="text-sm text-gray-500 hover:text-gray-700 underline">
                     Cancel processing
