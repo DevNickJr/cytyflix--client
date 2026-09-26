@@ -25,6 +25,15 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: '/_next/image(.*)',
+        headers: [
+          {
+            key: 'Cross-Origin-Resource-Policy',
+            value: 'cross-origin',
+          },
+        ],
+      },
     ];
   },
 };
