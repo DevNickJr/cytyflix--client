@@ -144,24 +144,11 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
               {/* <VideoDisplayer src={property.walkthroughVideo} /> */}
               {/* <h3 className="text-lg font-semibold">Walkthrough Video 2</h3> */}
               <video
-                controls
-                crossOrigin="anonymous" // 💡 THIS IS CRITICAL
-                className="w-full rounded-lg aspect-video"
-                preload="metadata"
-              // playsInline
-              // autoPlay
-              >
-                <source src={property.walkthroughVideo} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-              {/* <video
                 src={property.walkthroughVideo}
-                autoPlay
                 controls
-                playsInline
                 className="w-full rounded-lg aspect-video"
                 preload="metadata"
-              /> */}
+              />
             </div>
           )}
 
