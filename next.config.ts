@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
   //     //   ],
   //     // },
   //     // {
-  //     //   source: '/(.*)',
+  //     //   source: '/editor/:path*',
   //     //   headers: [
   //     //     {
   //     //       key: 'Cross-Origin-Opener-Policy',

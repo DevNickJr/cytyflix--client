@@ -201,24 +201,24 @@ export default function VideoProcessor({ file, onProcessComplete, onCancel }: Vi
                     <h3 className="text-lg font-semibold">1. Adjust Crop Area & Preview Max 60s</h3>
 
                     {/* Cropper UI Wrapper */}
-                    <div className="flex justify-center bg-gray-50 rounded p-2 border">
-                        <div
-                            ref={containerRef}
-                            onMouseMove={handleMouseMove}
-                            onMouseUp={handleMouseUp}
-                            onMouseLeave={handleMouseUp}
-                            className="relative select-none overflow-hidden rounded bg-black"
-                        >
-                            <video
-                                ref={videoRef}
-                                src={videoSrc}
-                                onLoadedMetadata={handleLoadedMetadata}
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                className="w-auto h-auto max-w-full max-h-[500px] block object-contain"
-                            />
+                    <div
+                        ref={containerRef}
+                        onMouseMove={handleMouseMove}
+                        onMouseUp={handleMouseUp}
+                        onMouseLeave={handleMouseUp}
+                        className="relative select-none overflow-hidden bg-black rounded"
+                        style={{ maxHeight: '500px' }}
+                    >
+                        <video
+                            ref={videoRef}
+                            src={videoSrc}
+                            onLoadedMetadata={handleLoadedMetadata}
+                            autoPlay
+                            controls
+                            playsInline
+                            muted
+                            className="w-full h-auto block max-h-[500px] object-contain"
+                        />
 
                         {/* Absolute Transparent Dim Overlay Layer */}
                         <div className="absolute inset-0 bg-black/40 pointer-events-none" />
