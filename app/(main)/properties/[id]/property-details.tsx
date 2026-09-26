@@ -116,7 +116,6 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
                     alt={property.title}
                     width={500}
                     height={500}
-                    {/* Changing the main aspect ratio to blend better with side-by-side elements */}
                     className="w-full aspect-[16/10] md:aspect-square object-cover md:row-span-2"
                   />
                   {allImages.slice(1, 3).map((img, i) => (
