@@ -116,7 +116,7 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
                     alt={property.title}
                     width={500}
                     height={500}
-                    className="w-full aspect-[4/3] object-cover md:row-span-2"
+                    className="w-full object-cover md:row-span-2"
                   />
                   {allImages.slice(1, 3).map((img, i) => (
                     <Image
@@ -125,7 +125,7 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
                       width={500}
                       height={500}
                       alt={`${property.title} ${i + 2}`}
-                      className="w-full aspect-video object-cover hidden md:block"
+                      className="w-full object-cover hidden md:block"
                     />
                   ))}
                 </div>
