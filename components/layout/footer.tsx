@@ -26,6 +26,7 @@ export function Footer() {
               <li><Link href={ROUTES.PROPERTIES} className="hover:text-foreground transition-colors">Properties</Link></li>
               <li><Link href={`${ROUTES.PROPERTIES}?listingType=rent`} className="hover:text-foreground transition-colors">Rentals</Link></li>
               <li><Link href={`${ROUTES.PROPERTIES}?listingType=shortlet`} className="hover:text-foreground transition-colors">Shortlets</Link></li>
+              <li><Link href={`${ROUTES.PROPERTIES}?listingType=sale`} className="hover:text-foreground transition-colors">Sales</Link></li>
             </ul>
           </div>
 

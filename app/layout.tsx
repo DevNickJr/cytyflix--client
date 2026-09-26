@@ -25,18 +25,18 @@ export const metadata: Metadata = {
   description:
     "Modern housing discovery platform connecting renters with property owners across Nigeria. Browse apartments, houses, studios, and more.",
   openGraph: {
-      title: `CytyFlix - Find Your Perfect Home`,
-      description: "Modern housing discovery platform connecting renters with property owners across Nigeria. Browse apartments, houses, studios, and more.",
-      type: "website",
-      siteName: "CytyFlix",
-      images: [{ url: 'https://www.cytyflix.com/applogo.png', alt: 'CytyFlix' }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `CytyFlix - Find Your Perfect Home`,
-      description: "Modern housing discovery platform connecting renters with property owners across Nigeria. Browse apartments, houses, studios, and more.",
-      images: ['https://www.cytyflix.com/applogo.png'],
-    },
+    title: `CytyFlix - Find Your Perfect Home`,
+    description: "Modern housing discovery platform connecting renters with property owners across Nigeria. Browse apartments, houses, studios, and more.",
+    type: "website",
+    siteName: "CytyFlix",
+    images: [{ url: 'https://www.cytyflix.com/applogo.png', alt: 'CytyFlix' }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `CytyFlix - Find Your Perfect Home`,
+    description: "Modern housing discovery platform connecting renters with property owners across Nigeria. Browse apartments, houses, studios, and more.",
+    images: ['https://www.cytyflix.com/applogo.png'],
+  },
 }
 
 export default function RootLayout({
@@ -46,7 +46,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || "GTM-NHJ2GCM7"} />

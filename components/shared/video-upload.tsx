@@ -4,6 +4,7 @@ import { useState, useCallback, useRef } from "react"
 import { uploadVideo } from "@/lib/upload"
 import { Button } from "@/components/ui/button"
 import { Upload, X, Loader2, Video } from "lucide-react"
+import VideoProcessor from "@/components/properties/video-processor"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 
@@ -53,7 +54,25 @@ export function VideoUpload({
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [dragOver, setDragOver] = useState(false)
+  const [fileToProcess, setFileToProcess] = useState<File | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const uploadProcessedVideo = async (file: File) => {
+      setUploading(true)
+      setProgress(0)
+      setFileToProcess(null)
+
+      try {
+        const path = `cytyflix/${pathPrefix}/${Date.now()}_${file.name}`
+        const url = await uploadVideo(file, path, (p) => setProgress(p))
+        onChange(url)
+      } catch {
+        toast.error("Failed to upload video")
+      } finally {
+        setUploading(false)
+        setProgress(0)
+      }
+  }
 
   const handleFile = useCallback(
     async (file: File) => {
@@ -68,28 +87,9 @@ export function VideoUpload({
         return
       }
 
-      try {
-        await validateVideoDuration(file, minDuration, maxDuration)
-      } catch (error: any) {
-        toast.error(error.message)
-        return
-      }
-
-      setUploading(true)
-      setProgress(0)
-
-      try {
-        const path = `cytyflix/${pathPrefix}/${Date.now()}_${file.name}`
-        const url = await uploadVideo(file, path, (p) => setProgress(p))
-        onChange(url)
-      } catch {
-        toast.error("Failed to upload video")
-      } finally {
-        setUploading(false)
-        setProgress(0)
-      }
+      setFileToProcess(file)
     },
-    [onChange, pathPrefix, minDuration, maxDuration, maxSizeMB]
+    [maxSizeMB]
   )
 
   const handleDrop = useCallback(
@@ -105,6 +105,27 @@ export function VideoUpload({
 
   const removeVideo = () => {
     onChange("")
+  }
+
+  if (fileToProcess) {
+    return (
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium">
+            {label} - Crop & Trim
+          </label>
+        </div>
+        <div className="border rounded-lg overflow-hidden bg-white">
+            <VideoProcessor 
+              file={fileToProcess} 
+              onProcessComplete={(processedFile) => {
+                  uploadProcessedVideo(processedFile);
+              }} 
+              onCancel={() => setFileToProcess(null)} 
+            />
+        </div>
+      </div>
+    )
   }
 
   return (

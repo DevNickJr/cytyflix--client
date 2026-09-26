@@ -13993,23 +13993,198 @@
           },
           {
             "name": "D-Line",
-            "latitude": 4.7922,
-            "longitude": 7.0056
+            "latitude": 4.7981,
+            "longitude": 7.0069
           },
           {
-            "name": "G.R.A. Phase 2",
-            "latitude": 4.8111,
-            "longitude": 6.9894
+            "name": "Amadi Ama",
+            "latitude": 4.7719,
+            "longitude": 7.0394
           },
           {
-            "name": "Diobu",
-            "latitude": 4.7889,
-            "longitude": 6.9844
+            "name": "Elekahia",
+            "latitude": 4.8083,
+            "longitude": 7.0256
           },
           {
-            "name": "Borokiri",
-            "latitude": 4.7456,
-            "longitude": 7.0289
+            "name": "Nkpogu",
+            "latitude": 4.7958,
+            "longitude": 7.0272
+          },
+          {
+            "name": "Ogbumnuabali",
+            "latitude": 4.7932,
+            "longitude": 7.0142
+          },
+          {
+            "name": "Eagles Island",
+            "latitude": 4.7794,
+            "longitude": 6.9856
+          },
+          {
+            "name": "Trans-Amadi",
+            "latitude": 4.8056,
+            "longitude": 7.0417
+          },
+          {
+            "name": "Old GRA",
+            "latitude": 4.7786,
+            "longitude": 7.0169
+          },
+          {
+            "name": "Mile 1",
+            "latitude": 4.7892,
+            "longitude": 6.9986
+          },
+          {
+            "name": "Mile 2",
+            "latitude": 4.7944,
+            "longitude": 6.9944
+          },
+          {
+            "name": "Mile 3",
+            "latitude": 4.8014,
+            "longitude": 6.9911
+          },
+          {
+            "name": "Mile 4",
+            "latitude": 4.8115,
+            "longitude": 6.9842
+          },
+          {
+            "name": "GRA Phase 1",
+            "latitude": 4.7961,
+            "longitude": 7.0011
+          },
+          {
+            "name": "GRA Phase 2",
+            "latitude": 4.8122,
+            "longitude": 6.9972
+          },
+          {
+            "name": "GRA Phase 3",
+            "latitude": 4.8181,
+            "longitude": 6.9919
+          },
+          {
+            "name": "GRA Phase 4",
+            "latitude": 4.821,
+            "longitude": 6.995
+          },
+          {
+            "name": "GRA Phase 5",
+            "latitude": 4.824,
+            "longitude": 6.998
+          },
+          {
+            "name": "Rumuola",
+            "latitude": 4.8258,
+            "longitude": 7.0106
+          },
+          {
+            "name": "Rumuokwuta",
+            "latitude": 4.8344,
+            "longitude": 6.9914
+          },
+          {
+            "name": "Woji",
+            "latitude": 4.8194,
+            "longitude": 7.0583
+          },
+          {
+            "name": "Elelenwo",
+            "latitude": 4.8417,
+            "longitude": 7.0667
+          },
+          {
+            "name": "Peter Odili Road",
+            "latitude": 4.7983,
+            "longitude": 7.0494
+          },
+          {
+            "name": "Rumuokoro",
+            "latitude": 4.8581,
+            "longitude": 6.9994
+          },
+          {
+            "name": "Ada George",
+            "latitude": 4.8311,
+            "longitude": 6.9694
+          },
+          {
+            "name": "Rumuomasi",
+            "latitude": 4.8286,
+            "longitude": 7.0319
+          },
+          {
+            "name": "Rumuodara",
+            "latitude": 4.8528,
+            "longitude": 7.0361
+          },
+          {
+            "name": "Rumuigbo",
+            "latitude": 4.8411,
+            "longitude": 6.9903
+          },
+          {
+            "name": "Mgbuoba",
+            "latitude": 4.8425,
+            "longitude": 6.9736
+          },
+          {
+            "name": "Ozuoba",
+            "latitude": 4.8514,
+            "longitude": 6.9536
+          },
+          {
+            "name": "Choba",
+            "latitude": 4.8911,
+            "longitude": 6.9144
+          },
+          {
+            "name": "NTA Road",
+            "latitude": 4.8464,
+            "longitude": 6.9794
+          },
+          {
+            "name": "Eleparanwo",
+            "latitude": 4.8264,
+            "longitude": 7.0494
+          },
+          {
+            "name": "Igrita",
+            "latitude": 4.9656,
+            "longitude": 7.0136
+          },
+          {
+            "name": "Rumugalabor",
+            "latitude": 4.845,
+            "longitude": 7.012
+          },
+          {
+            "name": "Oroazi",
+            "latitude": 4.8222,
+            "longitude": 6.9997
+          },
+          {
+            "name": "Ellibam",
+            "latitude": 4.829,
+            "longitude": 7.021
+          },
+          {
+            "name": "Orogbum",
+            "latitude": 4.799,
+            "longitude": 7.011
+          },
+          {
+            "name": "Abloma",
+            "latitude": 4.7672,
+            "longitude": 7.0483
+          },
+          {
+            "name": "Obogoro",
+            "latitude": 4.7611,
+            "longitude": 7.0611
           }
         ]
       },
