@@ -142,11 +142,15 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
             <div className="space-y-3">
               <h3 className="text-lg font-semibold">Walkthrough Video</h3>
               <VideoDisplayer src={property.walkthroughVideo} />
-              {/* <video
+              <h3 className="text-lg font-semibold">Walkthrough Video 2</h3>
+              <video
+                src={property.walkthroughVideo}
+                autoPlay
                 controls
+                playsInline
                 className="w-full rounded-lg aspect-video"
                 preload="metadata"
-              /> */}
+              />
             </div>
           )}
 
