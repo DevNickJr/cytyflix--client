@@ -148,6 +148,8 @@ export default function PropertyDetailClient({ property }: PropertyDetailClientP
                 crossOrigin="anonymous" // 💡 THIS IS CRITICAL
                 className="w-full rounded-lg aspect-video"
                 preload="metadata"
+              // playsInline
+              // autoPlay
               >
                 <source src={property.walkthroughVideo} type="video/mp4" />
                 Your browser does not support the video tag.
